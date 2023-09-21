@@ -2,16 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --primary-color: blue;
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
 @layer components {
   .wrapper {
     @apply flex-1 w-full md:max-w-[760px] border border-neutral-700 mx-auto;
   }
-}
-
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -19,6 +20,7 @@
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
+    --color-primary: "yellow";
   }
 }
 

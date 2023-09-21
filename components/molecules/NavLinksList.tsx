@@ -17,9 +17,9 @@ export default function NavLinksList({ links }: NavLinksListProps) {
   return (
     <ul className="hidden sm:flex gap-5">
       {links.map((link) => (
-        <NavLink href={link.href} key={link.name}>
-          {link.text}
-        </NavLink>
+        <li key={link.name}>
+          <NavLink href={link.href}>{link.text}</NavLink>
+        </li>
       ))}
     </ul>
   );
