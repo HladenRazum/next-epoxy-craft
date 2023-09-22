@@ -2,10 +2,9 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import Navigation from "@/components/organisms/Navigation";
-import PhoneNumberRow from "@/components/molecules/PhoneNumberRow";
 
 const roboto = Roboto({
-  weight: ["300", "400", "500", "700"],
+  weight: ["100", "300", "400", "500", "700"],
   subsets: ["latin"],
 });
 
@@ -24,7 +23,6 @@ export default function RootLayout({
       <body className={roboto.className}>
         <div className="flex flex-col min-h-screen">
           <div className="wrapper">
-            <PhoneNumberRow />
             <Navigation />
             {children}
           </div>
