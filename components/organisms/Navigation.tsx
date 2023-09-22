@@ -1,13 +1,13 @@
 import Hamburger from "../atoms/Hamburger";
-import { NAV_LINKS } from "../lib/constants";
+import { NAV_LINKS } from "../../lib/constants";
 import NavLinksList from "../molecules/NavLinksList";
 
-export default function Header() {
+export default function Navigation() {
   return (
-    <header className="flex content-center justify-between">
+    <nav className="flex content-center justify-between">
       <span>Logo</span>
       <NavLinksList links={NAV_LINKS} />
       <Hamburger />
-    </header>
+    </nav>
   );
 }

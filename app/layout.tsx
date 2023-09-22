@@ -1,7 +1,8 @@
-import Header from "@/components/organisms/Header";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
+import Navigation from "@/components/organisms/Navigation";
+import PhoneNumberRow from "@/components/molecules/PhoneNumberRow";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -23,7 +24,8 @@ export default function RootLayout({
       <body className={roboto.className}>
         <div className="flex flex-col min-h-screen">
           <div className="wrapper">
-            <Header />
+            <PhoneNumberRow />
+            <Navigation />
             {children}
           </div>
         </div>

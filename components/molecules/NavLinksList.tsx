@@ -1,5 +1,5 @@
 import NavLink from "../atoms/NavLink";
-import type { NavLinkType } from "../lib/constants";
+import type { NavLinkType } from "../../lib/constants";
 
 type NavLinksListProps = {
   links: NavLinkType[];

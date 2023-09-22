@@ -8,11 +8,11 @@ export default function Hamburger({ onClick }: HamburgerProps) {
   return (
     <button
       onClick={onClick}
-      className="flex p-1 flex-col justify-around w-7 h-7 md:hidden"
+      className="flex p-1 flex-col justify-around w-8 h-8 sm:hidden"
     >
-      <span className="w-full bg-primary h-[2px]"></span>
-      <span className="w-full bg-primary h-[2px]"></span>
-      <span className="w-full bg-primary h-[2px]"></span>
+      <span className="w-full bg-primary h-[3px] rounded"></span>
+      <span className="w-full bg-primary h-[3px] rounded"></span>
+      <span className="w-full bg-primary h-[3px] rounded"></span>
     </button>
   );
 }
