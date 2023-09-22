@@ -1,10 +1,10 @@
 import { MouseEvent } from "react";
 
-type HamburgerProps = {
+type HamburgerButtonProps = {
   onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
 };
 
-export default function Hamburger({ onClick }: HamburgerProps) {
+export default function HamburgerButton({ onClick }: HamburgerButtonProps) {
   return (
     <button
       onClick={onClick}

@@ -1,22 +1,35 @@
+"use client";
+
+import { useState } from "react";
 import type { NavLinkType } from "../../lib/constants";
+import HamburgerButton from "../atoms/HamburgerButton";
 import NavLink from "../atoms/NavLink";
 
 type MobileNavLinksListProps = {
-  isVisible: boolean;
   links: NavLinkType[];
 };
 
-export default function MobileNavLinksList({
-  links,
-  isVisible = false,
-}: MobileNavLinksListProps) {
+export default function MobileNavLinksList({ links }: MobileNavLinksListProps) {
+  const [isVisible, setIsVisible] = useState(false);
+
+  const visibleClasses =
+    "flex bg-paper flex-col absolute left-0 right-0 top-[80px] bottom-0 text-2xl items-center pt-[140px]";
+
+  const toggleMenu = () => {
+    setIsVisible(!isVisible);
+  };
   return (
-    <ul className={isVisible ? "flex" : "hidden"}>
-      {links.map((link) => (
-        <li key={link.name}>
-          <NavLink href={link.href}>{link.text}</NavLink>
-        </li>
-      ))}
-    </ul>
+    <div>
+      <ul className={isVisible ? visibleClasses : "hidden"}>
+        {links.map((link) => (
+          <li key={link.name} className="mb-10">
+            <NavLink onClick={toggleMenu} href={link.href}>
+              {link.text}
+            </NavLink>
+          </li>
+        ))}
+      </ul>
+      <HamburgerButton onClick={toggleMenu} />
+    </div>
   );
 }
