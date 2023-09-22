@@ -6,11 +6,13 @@ import Logo from "../atoms/Logo";
 
 export default function Navigation() {
   return (
-    <nav className="flex justify-between items-center sm:grid grid-cols-3 py-5 bb">
-      <Logo />
-      <PhoneNumberLink />
-      <NavLinksList links={NAV_LINKS} />
-      <MobileNavLinksList links={NAV_LINKS} />
-    </nav>
+    <div className="bb">
+      <nav className="wrapper flex justify-between items-center sm:grid grid-cols-3 py-5">
+        <Logo />
+        <PhoneNumberLink />
+        <NavLinksList links={NAV_LINKS} />
+        <MobileNavLinksList links={NAV_LINKS} />
+      </nav>
+    </div>
   );
 }

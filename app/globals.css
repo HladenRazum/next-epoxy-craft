@@ -13,30 +13,23 @@
 
 @layer components {
    .wrapper {
-      @apply flex-1 w-full md:max-w-[760px] border border-neutral-700 mx-auto;
+      @apply w-full md:max-w-[760px] mx-auto;
    }
    .bb {
       @apply border-neutral-700 border-b;
    }
 }
-/* 
+
 @media (prefers-color-scheme: dark) {
    :root {
       --paper-color: #000000;
-      --primary-color: rgb(157, 182, 255);
-
       --foreground-rgb: 255, 255, 255;
       --background-start-rgb: 0, 0, 0;
       --background-end-rgb: 0, 0, 0;
    }
-} */
+}
 
 body {
    color: rgb(var(--foreground-rgb));
-   background: linear-gradient(
-         to bottom,
-         transparent,
-         rgb(var(--background-end-rgb))
-      )
-      rgb(var(--background-start-rgb));
+   background-color: var(--paper-color);
 }
