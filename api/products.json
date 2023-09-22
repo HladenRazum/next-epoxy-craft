@@ -1,0 +1,59 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Epoxy Table 1",
+      "properties": {
+        "dimensions": "1219x610x762",
+        "wood material": "Walnut",
+        "weight": "22.68",
+        "color": "Blue"
+      },
+      "images": ["image1.jpg", "image2.jpg", "image3.jpg"]
+    },
+    {
+      "id": 2,
+      "name": "Epoxy Table 2",
+      "properties": {
+        "dimensions": "914x457x711",
+        "wood material": "Oak",
+        "weight": "18.14",
+        "color": "Green"
+      },
+      "images": ["image4.jpg", "image5.jpg", "image6.jpg"]
+    },
+    {
+      "id": 3,
+      "name": "Epoxy Table 3",
+      "properties": {
+        "dimensions": "1524x762x813",
+        "wood material": "Maple",
+        "weight": "27.22",
+        "color": "Red"
+      },
+      "images": ["image7.jpg", "image8.jpg", "image9.jpg"]
+    },
+    {
+      "id": 4,
+      "name": "Epoxy Table 4",
+      "properties": {
+        "dimensions": "1067x1067x914",
+        "wood material": "Cherry",
+        "weight": "24.95",
+        "color": "Yellow"
+      },
+      "images": ["image10.jpg", "image11.jpg", "image12.jpg"]
+    },
+    {
+      "id": 5,
+      "name": "Epoxy Table 5",
+      "properties": {
+        "dimensions": "1372x610x762",
+        "wood material": "Birch",
+        "weight": "21.77",
+        "color": "Purple"
+      },
+      "images": ["image13.jpg", "image14.jpg", "image15.jpg"]
+    }
+  ]
+}
