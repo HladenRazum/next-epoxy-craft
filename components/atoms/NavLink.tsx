@@ -8,7 +8,7 @@ type NavLinkProps = {
 
 export default function NavLink({ href, children }: NavLinkProps) {
   return (
-    <Link className="text-green-700" href={href}>
+    <Link className="text-primary" href={href}>
       {children}
     </Link>
   );

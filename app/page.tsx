@@ -1,4 +1,4 @@
-import IntroSection from "@/components/atoms/IntroSection";
+import IntroSection from "@/components/organisms/IntroSection";
 
 export default function Home() {
   return (

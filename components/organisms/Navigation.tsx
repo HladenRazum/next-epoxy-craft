@@ -12,7 +12,7 @@ export default function Navigation() {
   const [isMobileNavVisible, setIsMobileNavVisible] = useState(false);
 
   return (
-    <nav className="flex justify-between items-center sm:grid grid-cols-3 py-5">
+    <nav className="flex justify-between items-center sm:grid grid-cols-3 py-5 bb">
       <Logo />
       <PhoneNumberLink />
       <NavLinksList links={NAV_LINKS} />
