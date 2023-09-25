@@ -1,0 +1,7 @@
+.text-mask {
+  background-color: var(--primary-color);
+  background-image: url("/assets/product-images/1.jpg");
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url("./text-mask.css");
+
 @layer components {
   .wrapper {
     @apply w-full md:max-w-[760px] mx-auto;
