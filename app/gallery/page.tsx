@@ -1,13 +1,16 @@
 import Head from "next/head";
 
 import { Metadata } from "next";
+import getDataFromFirebase from "@/lib/getDataFromFirebase";
 
 export const metadata: Metadata = {
   title: "Epoxy Crafts | Gallery",
   description: "A collection of the products that I've done",
 };
 
-export default function GalleryPage() {
+export default async function GalleryPage() {
+  getDataFromFirebase();
+
   return (
     <>
       <Head>
