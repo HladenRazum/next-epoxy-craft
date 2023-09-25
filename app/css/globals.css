@@ -42,6 +42,12 @@ body {
 @media screen and (max-width: 768px) {
   ::-webkit-scrollbar {
     -webkit-appearance: none;
+    appearance: none;
     width: 0;
+    display: none;
+  }
+
+  :root {
+    scrollbar-width: none;
   }
 }
