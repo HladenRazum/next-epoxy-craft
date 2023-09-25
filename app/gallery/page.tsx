@@ -1,7 +1,6 @@
+import type { Metadata } from "next";
 import Head from "next/head";
-
-import { Metadata } from "next";
-import getDataFromFirebase from "@/lib/getDataFromFirebase";
+import getData from "@/lib/firebase";
 
 export const metadata: Metadata = {
   title: "Epoxy Crafts | Gallery",
@@ -9,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 export default async function GalleryPage() {
-  getDataFromFirebase();
+  // getData();
 
   return (
     <>
