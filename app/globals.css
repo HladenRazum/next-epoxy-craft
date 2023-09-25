@@ -2,34 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-   --primary-color: blue;
-   --paper-color: #fafafa;
-
-   --foreground-rgb: 0, 0, 0;
-   --background-start-rgb: 214, 219, 220;
-   --background-end-rgb: 255, 255, 255;
-}
-
 @layer components {
-   .wrapper {
-      @apply w-full md:max-w-[760px] mx-auto;
-   }
-   .bb {
-      @apply border-neutral-700 border-b;
-   }
+  .wrapper {
+    @apply w-full md:max-w-[760px] mx-auto;
+  }
+  .bb {
+    @apply border-neutral-700 border-b;
+  }
 }
 
-@media (prefers-color-scheme: dark) {
-   :root {
-      --paper-color: #000000;
-      --foreground-rgb: 255, 255, 255;
-      --background-start-rgb: 0, 0, 0;
-      --background-end-rgb: 0, 0, 0;
-   }
+:root {
+  --primary-color: blue;
+  --paper-color: #d10606;
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+:root {
+  --loader-color: var(--primary-color);
 }
 
 body {
-   color: rgb(var(--foreground-rgb));
-   background-color: var(--paper-color);
+  color: rgb(var(--foreground-rgb));
+  background-color: var(--paper-color);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper-color: #000000;
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
 }
