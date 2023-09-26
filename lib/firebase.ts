@@ -1,5 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import { getStorage, ref } from "firebase/storage";
 import {
   collection,
   getDocs,
@@ -27,6 +28,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 // const analytics = getAnalytics(app);
 
@@ -41,4 +43,7 @@ export default async function getData() {
   //     // doc.data() is never undefined for query doc snapshots
   //     console.log(doc.id, " => ", doc.data());
   //   });
+
+  const imagesRef = ref(storage, "images/1.jpg");
+  console.log(imagesRef);
 }
