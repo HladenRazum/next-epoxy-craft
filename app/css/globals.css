@@ -11,6 +11,9 @@
    .bb {
       @apply border-neutral-700 border-b;
    }
+   .link {
+      @apply text-primary underline font-light;
+   }
 }
 
 :root {
