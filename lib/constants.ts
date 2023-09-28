@@ -1,7 +1,6 @@
 export const NAV_LINKS: NavLinkType[] = [
   { name: "home", href: "/", text: "Начало" },
-  { name: "gallery", href: "/gallery", text: "Галерия" },
-  { name: "contact", href: "/contact", text: "Контакти" },
+  { name: "contact", href: "/#contact", text: "Контакти" },
 ];
 
 export type NavLinkType = {

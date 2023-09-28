@@ -5,52 +5,55 @@
 @import url("./text-mask.css");
 
 @layer components {
-   .wrapper {
-      @apply w-full sm:max-w-[760px] md:max-w-[1024px] mx-auto;
-   }
-   .bb {
-      @apply border-neutral-700 border-b;
-   }
-   .link {
-      @apply text-primary underline font-light;
-   }
+  .wrapper {
+    @apply w-full sm:max-w-[760px] md:max-w-[1024px] mx-auto;
+  }
+  .bb {
+    @apply border-neutral-700 border-b;
+  }
+  .link {
+    @apply text-primary underline font-light;
+  }
+  .bt {
+    @apply border-neutral-700 border-t;
+  }
 }
 
 :root {
-   --primary-color: blue;
-   --paper-color: #ffffff;
-   --foreground-rgb: 0, 0, 0;
-   --background-start-rgb: 214, 219, 220;
-   --background-end-rgb: 255, 255, 255;
+  --primary-color: blue;
+  --paper-color: #ffffff;
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
 }
 
 :root {
-   --loader-color: var(--primary-color);
+  --loader-color: var(--primary-color);
 }
 
 body {
-   color: rgb(var(--foreground-rgb));
-   background-color: var(--paper-color);
+  color: rgb(var(--foreground-rgb));
+  background-color: var(--paper-color);
 }
 
 @media (prefers-color-scheme: dark) {
-   :root {
-      --paper-color: #000000;
-      --foreground-rgb: 255, 255, 255;
-      --background-start-rgb: 0, 0, 0;
-      --background-end-rgb: 0, 0, 0;
-   }
+  :root {
+    --paper-color: #000000;
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
 }
 
 @media screen and (max-width: 768px) {
-   ::-webkit-scrollbar {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 0;
-      display: none;
-   }
+  ::-webkit-scrollbar {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 0;
+    display: none;
+  }
 
-   :root {
-      scrollbar-width: none;
-   }
+  :root {
+    scrollbar-width: none;
+  }
 }
