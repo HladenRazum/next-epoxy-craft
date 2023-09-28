@@ -1,0 +1,67 @@
+[
+  {
+    "product": 1,
+    "dimensions": {
+      "width": 122000,
+      "height": 76000,
+      "thickness": 5000,
+      "heightFromFloor": 71000
+    },
+    "materials": {
+      "resin": ["Crystal Clear Epoxy"],
+      "wood": ["Live Edge Walnut"]
+    }
+  },
+  {
+    "product": 2,
+    "dimensions": {
+      "width": 91000,
+      "height": 74000,
+      "thickness": 4000,
+      "heightFromFloor": 69000
+    },
+    "materials": {
+      "resin": ["Ocean Blue Epoxy"],
+      "wood": ["Reclaimed Oak"]
+    }
+  },
+  {
+    "product": 3,
+    "dimensions": {
+      "width": 152000,
+      "height": 79000,
+      "thickness": 6000,
+      "heightFromFloor": 74000
+    },
+    "materials": {
+      "resin": ["Emerald Green Epoxy"],
+      "wood": ["Maple"]
+    }
+  },
+  {
+    "product": 4,
+    "dimensions": {
+      "width": 107000,
+      "height": 71000,
+      "thickness": 5000,
+      "heightFromFloor": 66000
+    },
+    "materials": {
+      "resin": ["Sunset Orange Epoxy"],
+      "wood": ["Cherry"]
+    }
+  },
+  {
+    "product": 5,
+    "dimensions": {
+      "width": 183000,
+      "height": 81000,
+      "thickness": 7500,
+      "heightFromFloor": 76000
+    },
+    "materials": {
+      "resin": ["Amethyst Purple Epoxy"],
+      "wood": ["Birch"]
+    }
+  }
+]
