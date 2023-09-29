@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import Navigation from "@/components/organisms/Navigation";
 import Footer from "@/components/organisms/Footer";
+import { TERMS } from "@/lib/constants";
 
 const roboto = Roboto({
   weight: ["100", "300", "400", "500", "700"],
@@ -10,7 +11,7 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "Epoxy Crafts",
+  title: TERMS.PAGE_TITLE,
   description: "A website for beautiful products made of wood and epoxy",
 };
 
