@@ -18,11 +18,12 @@ export default function Gallery({
 }: Props) {
   let allImages = [mainImageUrl, ...imagesUrls];
   return (
-      <ul className='flex flex-wrap gap-2'>
-         {allImages.map((url, i) =>
-         (<li key={productId.concat(i.toString())}>
-            <Image src={url} alt={productName} width={200} height={200} />
-         </li>))}
-      </ul>
-   );
+    <ul className="flex flex-wrap gap-2">
+      {allImages.map((url, i) => (
+        <li key={productId.concat(i.toString())}>
+          <Image src={url} alt={productName} width={200} height={200} />
+        </li>
+      ))}
+    </ul>
+  );
 }

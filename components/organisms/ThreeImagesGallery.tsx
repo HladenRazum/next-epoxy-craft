@@ -9,7 +9,7 @@ export default function ThreeImagesGallery() {
             src="/assets/bg-images/bg-1.jfif"
             alt="1"
             fill
-            objectFit="cover"
+            className="object-cover"
           />
         </div>
         <div className="w-full h-[380px] md:h-full relative">
@@ -17,7 +17,7 @@ export default function ThreeImagesGallery() {
             src="/assets/bg-images/bg-2.jpg"
             alt="2"
             fill
-            objectFit="cover"
+            className="object-cover"
           />
         </div>
         <div className="w-full h-[380px] md:h-full relative">
@@ -25,7 +25,7 @@ export default function ThreeImagesGallery() {
             src="/assets/bg-images/bg-3.jpg"
             alt="3"
             fill
-            objectFit="cover"
+            className="object-cover"
           />
         </div>
       </div>
