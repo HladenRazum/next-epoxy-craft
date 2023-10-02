@@ -59,6 +59,7 @@ export async function getAllProducts() {
 }
 
 export async function seedData() {
+  console.log("Seed data");
   const id = v4();
   const product: EpoxyProduct = {
     id,
@@ -72,10 +73,10 @@ export async function seedData() {
         wood: ["Cherry"],
       },
       dimensions: {
-        width: 8_000,
-        height: 15_000,
-        thickness: 4_400,
-        heightFromFloor: 660,
+        width: 80,
+        height: 170,
+        thickness: 4.3,
+        heightFromFloor: 80,
       },
     },
   };
@@ -86,5 +87,45 @@ export async function seedData() {
   } catch (err) {
     console.log(err);
     console.log("Could not update");
+  }
+}
+
+export async function addProduct(product: EpoxyProduct) {
+  const id = v4();
+
+  const newProduct: EpoxyProduct = {
+    type: product.type,
+    name: product.name,
+    mainImageUrl: "",
+    imagesUrls: [],
+    properties: {
+      materials: {
+        resin: product.properties.materials.resin,
+        wood: product.properties.materials.wood,
+      },
+      dimensions: {
+        width: product.properties.dimensions.width,
+        height: product.properties.dimensions.height,
+        thickness: product.properties.dimensions.thickness,
+        heightFromFloor: product.properties.dimensions.heightFromFloor,
+      },
+    },
+    //  ...product,
+    id,
+  };
+
+  try {
+    await setDoc(doc(db, "products", id), newProduct);
+    return {
+      status: "success",
+      message: "Product Created",
+      productId: id,
+    };
+  } catch (err: any) {
+    return {
+      status: "error",
+      message: err.message || JSON.stringify(err, null, 1),
+      productId: null,
+    };
   }
 }
