@@ -26,7 +26,8 @@ export default function AddProductForm() {
 
     setStatusMessage("");
 
-    // const response = await uploadImage(mainImageFile);
+    const response = await uploadImage(mainImageFile);
+    console.log(response);
     // setStatusMessage(response.message);
 
     // const id = v4();
@@ -77,12 +78,12 @@ export default function AddProductForm() {
           {...register("mainImage")}
           id="mainImage"
           accept="image/*"
-          // onChange={(e) => {
-          //   if (e.target.files && e.target.files.length > 0) {
-          //     const file = e.target.files[0];
-          //     const url = URL.createObjectURL(file);
-          //   }
-          // }}
+        // onChange={(e) => {
+        //   if (e.target.files && e.target.files.length > 0) {
+        //     const file = e.target.files[0];
+        //     const url = URL.createObjectURL(file);
+        //   }
+        // }}
         />
       </div>
       {/* <select className="text-black mb-1" {...register("type")} id="type">
@@ -124,7 +125,7 @@ export default function AddProductForm() {
           <input type="number" name='height-from-floor' id='height-from-floor' />
         </div>
       </div> */}
-      <div className="mb-1">
+      {/* <div className="mb-1">
         <label htmlFor="images">Добави допълнителни снимки</label>
         <input
           type="file"
@@ -133,7 +134,7 @@ export default function AddProductForm() {
           id="images"
           accept="image/*"
         />
-      </div>
+      </div> */}
       <button className="bg-primary btn text-white">Добави</button>
     </form>
   );

@@ -7,9 +7,13 @@ import {
   getFirestore,
   query,
   setDoc,
-  where,
 } from "firebase/firestore";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
 import { v4 } from "uuid";
 import { firebaseCofig } from "./firebase.config";
 import { FirebaseFiles } from "./constants";
@@ -35,32 +39,42 @@ export type HomepageProduct = {
   name: string;
 };
 
-export async function uploadImage(image: File) {
+export async function uploadImage(file: File) {
   const storage = getStorage();
-  const folderRef = ref(
+  const storageRef = ref(
     storage,
-    `${FirebaseFiles.STORAGE_IMAGES_FOLDER}/${image.name}`
+    `${FirebaseFiles.STORAGE_IMAGES_FOLDER}/${file.name}`
   );
 
-  let response;
-  try {
-    let snapshot = await uploadBytes(folderRef, image);
-    if (snapshot) {
-      response = {
-        status: "success",
-        message: "Image uploaded to storage",
-      };
-    } else {
-      throw new Error("Failde to upload image");
-    }
-  } catch (error) {
-    response = {
-      status: "error",
-      message: JSON.stringify(error, null, 1),
-    };
-  }
+  const uploadTask = uploadBytesResumable(storageRef, file);
 
-  return response;
+  let downloadUrl;
+
+  uploadTask.on(
+    "state_changed",
+    (snapshot) => {
+      // // Observe state change events such as progress, pause, and resume
+      // // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+      // const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      // console.log("Upload is " + progress + "% done");
+      // switch (snapshot.state) {
+      //   case "paused":
+      //     console.log("Upload is paused");
+      //     break;
+      //   case "running":
+      //     console.log("Upload is running");
+      //     break;
+      // }
+    },
+    (error) => {
+      // Handle unsuccessful uploads
+    },
+    async () => {
+      // Handle successful uploads on complete
+      downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
+      console.log(downloadUrl);
+    }
+  );
 }
 
 export async function getProductById(productId: string): Promise<EpoxyProduct> {
