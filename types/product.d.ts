@@ -25,4 +25,4 @@ type ProductProperties = {
   weight?: number;
 };
 
-type EpoxyProductType = "table" | "cutting-board";
+type EpoxyProductType = "table" | "cutting-board" | "table-top";

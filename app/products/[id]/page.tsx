@@ -47,6 +47,12 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   const { id } = params;
   const product = await getProductById(id);
 
+  if (!product) {
+    return {
+      title: `${TERMS.PAGE_TITLE} | Product not found`,
+    };
+  }
+
   let productType;
 
   switch (product.type) {
