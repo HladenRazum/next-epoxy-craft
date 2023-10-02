@@ -1,10 +1,17 @@
 "use client";
 
 import { SubmitHandler, useForm } from "react-hook-form";
-import { addProduct, uploadImage } from "@/lib/firebase";
+import { addProduct } from "@/lib/firebase";
 import { v4 } from "uuid";
 import { useState } from "react";
 import Image from "next/image";
+import { FirebaseFiles } from "@/lib/constants";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
 
 type FormFields = {
   name: string;
@@ -17,17 +24,52 @@ type FormFields = {
 
 export default function AddProductForm() {
   const [statusMessage, setStatusMessage] = useState("");
+  const [mainImageUrl, setMainImageUrl] = useState("");
+
+  async function uploadImage(file: File) {
+    const storage = getStorage();
+    const storageRef = ref(
+      storage,
+      `${FirebaseFiles.STORAGE_IMAGES_FOLDER}/${file.name}`
+    );
+
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        // // Observe state change events such as progress, pause, and resume
+        // // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        // const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        // console.log("Upload is " + progress + "% done");
+        // switch (snapshot.state) {
+        //   case "paused":
+        //     console.log("Upload is paused");
+        //     break;
+        //   case "running":
+        //     console.log("Upload is running");
+        //     break;
+        // }
+      },
+      (error) => {
+        // Handle unsuccessful uploads
+      },
+      async () => {
+        // Handle successful uploads on complete
+        const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
+        setMainImageUrl(downloadUrl);
+      }
+    );
+  }
 
   const { register, handleSubmit, reset } = useForm<FormFields>();
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
     console.log(data);
     const mainImageFile = data.mainImage[0];
+    await uploadImage(mainImageFile);
 
     setStatusMessage("");
-
-    const response = await uploadImage(mainImageFile);
-    console.log(response);
     // setStatusMessage(response.message);
 
     // const id = v4();
@@ -57,6 +99,7 @@ export default function AddProductForm() {
       onSubmit={handleSubmit(onSubmit)}
       className="w-[500px] bg-indigo-200 p-2 rounded text-black"
     >
+      <p className="text-red-700 mb-2">{mainImageUrl}</p>
       <div>
         <p className="text-red-500">{statusMessage}</p>
       </div>
@@ -78,12 +121,12 @@ export default function AddProductForm() {
           {...register("mainImage")}
           id="mainImage"
           accept="image/*"
-        // onChange={(e) => {
-        //   if (e.target.files && e.target.files.length > 0) {
-        //     const file = e.target.files[0];
-        //     const url = URL.createObjectURL(file);
-        //   }
-        // }}
+          // onChange={(e) => {
+          //   if (e.target.files && e.target.files.length > 0) {
+          //     const file = e.target.files[0];
+          //     const url = URL.createObjectURL(file);
+          //   }
+          // }}
         />
       </div>
       {/* <select className="text-black mb-1" {...register("type")} id="type">
