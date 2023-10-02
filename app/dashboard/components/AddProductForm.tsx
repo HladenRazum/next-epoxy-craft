@@ -1,45 +1,54 @@
 "use client";
 
 import { SubmitHandler, useForm } from "react-hook-form";
-import { addProduct } from "@/lib/firebase";
+import { addProduct, uploadImage } from "@/lib/firebase";
 import { v4 } from "uuid";
+import { useState } from "react";
+import Image from "next/image";
 
 type FormFields = {
   name: string;
   type: EpoxyProductType;
   wood: string;
   resin: string;
+  mainImage: File[];
+  images: File[];
 };
 
 export default function AddProductForm() {
+  const [statusMessage, setStatusMessage] = useState("");
+
   const { register, handleSubmit, reset } = useForm<FormFields>();
+
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
-    const id = v4();
-    // TODO: Get product info from the state
-    const product: EpoxyProduct = {
-      id,
-      type: data.type,
-      name: data.name,
-      mainImageUrl: "",
-      imagesUrls: [],
-      properties: {
-        materials: {
-          resin: [data.resin],
-          wood: [data.wood],
-        },
-        dimensions: {
-          width: 80,
-          height: 170,
-          thickness: 4.3,
-          heightFromFloor: 80,
-        },
-      },
-    };
+    console.log(data);
+    const mainImageFile = data.mainImage[0];
 
-    const res = await addProduct(product);
-    console.log(res);
+    setStatusMessage("");
 
-    reset();
+    // const response = await uploadImage(mainImageFile);
+    // setStatusMessage(response.message);
+
+    // const id = v4();
+    // const product: EpoxyProduct = {
+    //   id,
+    //   type: data.type,
+    //   name: data.name,
+    //   mainImageUrl: "",
+    //   imagesUrls: [],
+    //   properties: {
+    //     materials: {
+    //       resin: [data.resin],
+    //       wood: [data.wood],
+    //     },
+    //     dimensions: {
+    //       width: 80,
+    //       height: 170,
+    //       thickness: 4.3,
+    //       heightFromFloor: 80,
+    //     },
+    //   },
+    // };
   };
 
   return (
@@ -47,6 +56,9 @@ export default function AddProductForm() {
       onSubmit={handleSubmit(onSubmit)}
       className="w-[500px] bg-indigo-200 p-2 rounded text-black"
     >
+      <div>
+        <p className="text-red-500">{statusMessage}</p>
+      </div>
       <h2 className="text-xl text-primary">Добави продукт</h2>
       <div className="mb-1">
         <label htmlFor="name">Име на продукта: </label>
@@ -58,7 +70,22 @@ export default function AddProductForm() {
           id="name"
         />
       </div>
-      <select className="text-black mb-1" {...register("type")} id="type">
+      <div className="mb-1">
+        <label htmlFor="mainImage">Главна снимка: </label>
+        <input
+          type="file"
+          {...register("mainImage")}
+          id="mainImage"
+          accept="image/*"
+          // onChange={(e) => {
+          //   if (e.target.files && e.target.files.length > 0) {
+          //     const file = e.target.files[0];
+          //     const url = URL.createObjectURL(file);
+          //   }
+          // }}
+        />
+      </div>
+      {/* <select className="text-black mb-1" {...register("type")} id="type">
         <option value="table">маса</option>
         <option value="cutting-board">дъска за рязане</option>
         <option value="table-top">плот</option>
@@ -73,7 +100,7 @@ export default function AddProductForm() {
           <label htmlFor="resin">Смола: </label>
           <input type="text" id="resin" {...register("resin")} />
         </div>
-      </div>
+      </div> */}
       {/*
      
 
@@ -97,6 +124,16 @@ export default function AddProductForm() {
           <input type="number" name='height-from-floor' id='height-from-floor' />
         </div>
       </div> */}
+      <div className="mb-1">
+        <label htmlFor="images">Добави допълнителни снимки</label>
+        <input
+          type="file"
+          multiple
+          {...register("images")}
+          id="images"
+          accept="image/*"
+        />
+      </div>
       <button className="bg-primary btn text-white">Добави</button>
     </form>
   );

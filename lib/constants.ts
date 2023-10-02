@@ -15,3 +15,8 @@ export const TERMS = {
   CUTTING_BOARD: "дъска за рязане",
   TABLE: "маса",
 };
+
+export const FirebaseFiles = {
+  FIRESTORE_DOCUMENTS_FOLDER: "products",
+  STORAGE_IMAGES_FOLDER: "product-images",
+};

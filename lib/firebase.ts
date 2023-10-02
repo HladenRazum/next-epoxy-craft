@@ -9,8 +9,10 @@ import {
   setDoc,
   where,
 } from "firebase/firestore";
-import { firebaseCofig } from "./firebase.config";
+import { getStorage, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
+import { firebaseCofig } from "./firebase.config";
+import { FirebaseFiles } from "./constants";
 
 const app = initializeApp(firebaseCofig);
 const db = getFirestore(app);
@@ -33,15 +35,43 @@ export type HomepageProduct = {
   name: string;
 };
 
+export async function uploadImage(image: File) {
+  const storage = getStorage();
+  const folderRef = ref(
+    storage,
+    `${FirebaseFiles.STORAGE_IMAGES_FOLDER}/${image.name}`
+  );
+
+  let response;
+  try {
+    let snapshot = await uploadBytes(folderRef, image);
+    if (snapshot) {
+      response = {
+        status: "success",
+        message: "Image uploaded to storage",
+      };
+    } else {
+      throw new Error("Failde to upload image");
+    }
+  } catch (error) {
+    response = {
+      status: "error",
+      message: JSON.stringify(error, null, 1),
+    };
+  }
+
+  return response;
+}
+
 export async function getProductById(productId: string): Promise<EpoxyProduct> {
-  const docRef = doc(db, "products", productId);
+  const docRef = doc(db, FirebaseFiles.FIRESTORE_DOCUMENTS_FOLDER, productId);
   const docSnap = await getDoc(docRef);
   return docSnap.data() as EpoxyProduct;
 }
 
 export async function getAllProducts() {
   let products: HomepageProduct[] = [];
-  const q = query(collection(db, "products"));
+  const q = query(collection(db, FirebaseFiles.FIRESTORE_DOCUMENTS_FOLDER));
   const qSnapShot = await getDocs(q);
 
   qSnapShot.forEach((doc) => {
@@ -58,37 +88,37 @@ export async function getAllProducts() {
   return products;
 }
 
-export async function seedData() {
-  console.log("Seed data");
-  const id = v4();
-  const product: EpoxyProduct = {
-    id,
-    type: "table",
-    name: "Sunset Orange",
-    mainImageUrl: "",
-    imagesUrls: [],
-    properties: {
-      materials: {
-        resin: ["Sunset Orange"],
-        wood: ["Cherry"],
-      },
-      dimensions: {
-        width: 80,
-        height: 170,
-        thickness: 4.3,
-        heightFromFloor: 80,
-      },
-    },
-  };
+// export async function seedData() {
+//   console.log("Seed data");
+//   const id = v4();
+//   const product: EpoxyProduct = {
+//     id,
+//     type: "table",
+//     name: "Sunset Orange",
+//     mainImageUrl: "",
+//     imagesUrls: [],
+//     properties: {
+//       materials: {
+//         resin: ["Sunset Orange"],
+//         wood: ["Cherry"],
+//       },
+//       dimensions: {
+//         width: 80,
+//         height: 170,
+//         thickness: 4.3,
+//         heightFromFloor: 80,
+//       },
+//     },
+//   };
 
-  try {
-    await setDoc(doc(db, "products", id), product);
-    console.log("Product uploaded");
-  } catch (err) {
-    console.log(err);
-    console.log("Could not update");
-  }
-}
+//   try {
+//     await setDoc(doc(db, "products", id), product);
+//     console.log("Product uploaded");
+//   } catch (err) {
+//     console.log(err);
+//     console.log("Could not update");
+//   }
+// }
 
 export async function addProduct(product: EpoxyProduct) {
   const id = v4();
@@ -115,7 +145,10 @@ export async function addProduct(product: EpoxyProduct) {
   };
 
   try {
-    await setDoc(doc(db, "products", id), newProduct);
+    await setDoc(
+      doc(db, FirebaseFiles.FIRESTORE_DOCUMENTS_FOLDER, id),
+      newProduct
+    );
     return {
       status: "success",
       message: "Product Created",
