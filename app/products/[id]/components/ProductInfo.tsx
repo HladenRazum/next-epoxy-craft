@@ -8,8 +8,7 @@ type Props = {
 export default function ProductInfo({ product }: Props) {
   const woodArr = product.properties.materials.wood;
   const resinArr = product.properties.materials.resin;
-  // TODO: Should be dimensions inside the database => fix when seeding real data
-  const dimensions = product.properties.dimentions;
+  const dimensions = product.properties.dimensions;
 
   return (
     <>

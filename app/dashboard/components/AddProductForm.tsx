@@ -1,31 +1,36 @@
 "use client";
 
+import { addProduct } from "@/lib/firebase";
 import React, { FormEvent } from "react";
+import { v4 } from "uuid";
 
 export default function AddProductForm() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    // const id = v4();
-    // const product: EpoxyProduct = {
-    //   id,
-    //   type: "table",
-    //   name: "Sunset Orange",
-    //   mainImageUrl: "",
-    //   imagesUrls: [],
-    //   properties: {
-    //     materials: {
-    //       resin: ["Sunset Orange"],
-    //       wood: ["Cherry"],
-    //     },
-    //     dimensions: {
-    //       width: 80,
-    //       height: 170,
-    //       thickness: 4.3,
-    //       heightFromFloor: 80,
-    //     },
-    //   },
-    // };
+    const id = v4();
+    // TODO: Get product info from the state
+    const product: EpoxyProduct = {
+      id,
+      type: "table",
+      name: "Sunset Orange",
+      mainImageUrl: "",
+      imagesUrls: [],
+      properties: {
+        materials: {
+          resin: ["Sunset Orange"],
+          wood: ["Cherry"],
+        },
+        dimensions: {
+          width: 80,
+          height: 170,
+          thickness: 4.3,
+          heightFromFloor: 80,
+        },
+      },
+    };
+
+    // const res = await addProduct(product);
   };
 
   return (
