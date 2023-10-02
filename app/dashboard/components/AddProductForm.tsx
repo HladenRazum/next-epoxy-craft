@@ -1,13 +1,10 @@
 "use client";
 
-import { addProduct, seedData } from '@/lib/firebase';
-import React, { FormEvent } from 'react';
-import { v4 } from 'uuid';
+import React, { FormEvent } from "react";
 
 export default function AddProductForm() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log("Submitting");
 
     // const id = v4();
     // const product: EpoxyProduct = {
@@ -29,15 +26,14 @@ export default function AddProductForm() {
     //     },
     //   },
     // };
-
-    const response = await seedData();
-    console.log(response);
-
   };
 
   return (
-    <form onSubmit={handleSubmit} className='w-[500px] bg-indigo-200 p-2 rounded text-black'>
-      <h2 className='text-xl text-primary'>Добави продукт</h2>
+    <form
+      onSubmit={handleSubmit}
+      className="w-[500px] bg-indigo-200 p-2 rounded text-black"
+    >
+      <h2 className="text-xl text-primary">Добави продукт</h2>
       {/* <div className='mb-1'>
         <label htmlFor="name">Име на продукта: </label>
         <input type="text" id='name' name='name' />
@@ -78,7 +74,7 @@ export default function AddProductForm() {
           <input type="number" name='height-from-floor' id='height-from-floor' />
         </div>
       </div> */}
-      <button className='bg-primary btn text-white'>Добави</button>
+      <button className="bg-primary btn text-white">Добави</button>
     </form>
   );
 }
