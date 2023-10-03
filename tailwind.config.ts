@@ -16,6 +16,7 @@ const config: Config = {
       colors: {
         primary: "var(--primary-color)",
         paper: "var(--paper-color)",
+        disabled: 'calc("var(--primary-color) + 0.5)',
       },
       fontSize: {
         xs: "12px",

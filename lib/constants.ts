@@ -20,3 +20,8 @@ export const FirebaseFiles = {
   FIRESTORE_DOCUMENTS_FOLDER: "products",
   STORAGE_IMAGES_FOLDER: "product-images",
 };
+
+export const ResponseStatuses = {
+  SUCCESS: "success",
+  ERROR: "error",
+};

@@ -1,110 +1,64 @@
 "use client";
 
 import { SubmitHandler, useForm } from "react-hook-form";
-import { addProduct } from "@/lib/firebase";
-import { v4 } from "uuid";
+import { addProduct, uploadImage, uploadSelectedImages } from "@/lib/firebase";
+import { ResponseStatuses } from "@/lib/constants";
 import { useState } from "react";
-import Image from "next/image";
-import { FirebaseFiles } from "@/lib/constants";
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "firebase/storage";
-import { initializeApp } from "firebase/app";
-import { firebaseCofig } from "@/lib/firebase.config";
 
 type FormFields = {
-  name: string;
   type: EpoxyProductType;
+  name: string;
   wood: string;
   resin: string;
   mainImage: File[];
   images: File[];
+  dimensions: Dimensions;
 };
 
 export default function AddProductForm() {
-  const [statusMessage, setStatusMessage] = useState("");
-  const [mainImageUrl, setMainImageUrl] = useState("");
-
-  async function uploadImage(file: File) {
-    initializeApp(firebaseCofig);
-    const storage = getStorage();
-    const storageRef = ref(
-      storage,
-      `${FirebaseFiles.STORAGE_IMAGES_FOLDER}/${file.name}`
-    );
-
-    const uploadTask = uploadBytesResumable(storageRef, file);
-
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        // // Observe state change events such as progress, pause, and resume
-        // // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-        // const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        // console.log("Upload is " + progress + "% done");
-        // switch (snapshot.state) {
-        //   case "paused":
-        //     console.log("Upload is paused");
-        //     break;
-        //   case "running":
-        //     console.log("Upload is running");
-        //     break;
-        // }
-      },
-      (error) => {
-        // Handle unsuccessful uploads
-        console.log(error.message);
-      },
-      async () => {
-        // Handle successful uploads on complete
-        const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
-        setMainImageUrl(downloadUrl);
-      }
-    );
-  }
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<FormFields>();
+  const [isLoading, setIsLoading] = useState(false);
+  const { register, handleSubmit, reset } = useForm<FormFields>();
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
+    setIsLoading(true);
     const mainImageFile = data.mainImage[0];
-
-    console.log("Uploading main image...");
-    await uploadImage(mainImageFile);
-    console.log("Main image uploaded.");
-
-    console.log("Uploading other images...");
-    // TODO: await for uploading of other images
-
-    const id = v4();
-    const product: EpoxyProduct = {
-      id,
-      type: data.type,
+    // 1. Upload main image and get downloadUrl
+    const uploadMainImageResponse = await uploadImage(mainImageFile);
+    // 2. Upload other images and add their downloadUrls to imagesUrls array
+    const otherImagesUrls = await uploadSelectedImages(data.images);
+    // 3. Upload the new product
+    const product: Omit<EpoxyProduct, "id"> = {
+      type: data.type ?? "cutting-board",
       name: data.name,
-      mainImageUrl: mainImageUrl,
-      imagesUrls: [],
+      mainImageUrl: uploadMainImageResponse.downloadUrl || "",
+      imagesUrls: otherImagesUrls,
       properties: {
         materials: {
-          resin: [data.resin],
-          wood: [data.wood],
+          resin: [],
+          wood: [],
         },
         dimensions: {
-          width: 80,
-          height: 170,
-          thickness: 4.3,
-          heightFromFloor: 80,
+          width: data.dimensions.width,
+          height: data.dimensions.height,
+          thickness: data.dimensions.thickness,
+          heightFromFloor: data.dimensions.heightFromFloor,
         },
       },
     };
 
-    console.log(errors);
+    // TODO: add selected resin and wood to the product object
+
+    const response = await addProduct(product);
+
+    if (response.status === ResponseStatuses.SUCCESS) {
+      console.log("Продукта е добавен към базата");
+    } else {
+      console.error("Грешка при създаването на продукта. Моля опитайте отново");
+    }
+
+    setIsLoading(false);
+    reset();
+    // 4. ??? Notify the user and give a link to the new page
   };
 
   return (
@@ -112,9 +66,6 @@ export default function AddProductForm() {
       onSubmit={handleSubmit(onSubmit)}
       className="w-[500px] bg-indigo-200 p-2 rounded text-black"
     >
-      <div>
-        <p className="text-red-500">{statusMessage}</p>
-      </div>
       <h2 className="text-xl text-primary">Добави продукт</h2>
       <div className="mb-1">
         <label htmlFor="name">Име на продукта: </label>
@@ -136,16 +87,9 @@ export default function AddProductForm() {
           id="mainImage"
           accept="image/*"
           required
-
-          // onChange={(e) => {
-          //   if (e.target.files && e.target.files.length > 0) {
-          //     const file = e.target.files[0];
-          //     const url = URL.createObjectURL(file);
-          //   }
-          // }}
         />
       </div>
-      {/* <select className="text-black mb-1" {...register("type")} id="type">
+      <select className="text-black mb-1" {...register("type")} id="type">
         <option value="table">маса</option>
         <option value="cutting-board">дъска за рязане</option>
         <option value="table-top">плот</option>
@@ -160,30 +104,34 @@ export default function AddProductForm() {
           <label htmlFor="resin">Смола: </label>
           <input type="text" id="resin" {...register("resin")} />
         </div>
-      </div> */}
-      {/*
-     
-
-      
+      </div>
       <div>
         <h3 className="text-primary text-lg">Размери в сантиметри</h3>
-        <div className='mb-1'>
+        <div className="mb-1">
           <label htmlFor="width">Ширина: </label>
-          <input type="number" name='width' id='width' />
+          <input type="number" {...register("dimensions.width")} id="width" />
         </div>
-        <div className='mb-1'>
+        <div className="mb-1">
           <label htmlFor="length">Дължина: </label>
-          <input type="number" name='length' id='length' />
+          <input type="number" {...register("dimensions.height")} id="length" />
         </div>
-        <div className='mb-1'>
+        <div className="mb-1">
           <label htmlFor="thickness">Дебелина: </label>
-          <input type="number" name='thickness' id='thickness' />
+          <input
+            type="number"
+            {...register("dimensions.thickness")}
+            id="thickness"
+          />
         </div>
-        <div className='mb-1'>
+        <div className="mb-1">
           <label htmlFor="height-from-floor">Височина от пода: </label>
-          <input type="number" name='height-from-floor' id='height-from-floor' />
+          <input
+            type="number"
+            {...register("dimensions.heightFromFloor")}
+            id="height-from-floor"
+          />
         </div>
-      </div> */}
+      </div>
       <div className="my-5">
         <label htmlFor="images">Добави допълнителни снимки</label>
         <input
@@ -194,7 +142,12 @@ export default function AddProductForm() {
           accept="image/*"
         />
       </div>
-      <button className="bg-primary btn text-white">Добави</button>
+      <button
+        className="bg-primary btn text-white disabled:bg-neutral-500"
+        disabled={isLoading}
+      >
+        {isLoading ? "Качване към базата данни..." : "Добави"}
+      </button>
     </form>
   );
 }
