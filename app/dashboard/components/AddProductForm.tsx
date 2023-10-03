@@ -12,6 +12,8 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
+import { initializeApp } from "firebase/app";
+import { firebaseCofig } from "@/lib/firebase.config";
 
 type FormFields = {
   name: string;
@@ -27,6 +29,7 @@ export default function AddProductForm() {
   const [mainImageUrl, setMainImageUrl] = useState("");
 
   async function uploadImage(file: File) {
+    initializeApp(firebaseCofig);
     const storage = getStorage();
     const storageRef = ref(
       storage,
@@ -53,6 +56,7 @@ export default function AddProductForm() {
       },
       (error) => {
         // Handle unsuccessful uploads
+        console.log(error.message);
       },
       async () => {
         // Handle successful uploads on complete
@@ -62,36 +66,45 @@ export default function AddProductForm() {
     );
   }
 
-  const { register, handleSubmit, reset } = useForm<FormFields>();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormFields>();
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
-    console.log(data);
     const mainImageFile = data.mainImage[0];
+
+    console.log("Uploading main image...");
     await uploadImage(mainImageFile);
+    console.log("Main image uploaded.");
 
-    setStatusMessage("");
-    // setStatusMessage(response.message);
+    console.log("Uploading other images...");
+    // TODO: await for uploading of other images
 
-    // const id = v4();
-    // const product: EpoxyProduct = {
-    //   id,
-    //   type: data.type,
-    //   name: data.name,
-    //   mainImageUrl: "",
-    //   imagesUrls: [],
-    //   properties: {
-    //     materials: {
-    //       resin: [data.resin],
-    //       wood: [data.wood],
-    //     },
-    //     dimensions: {
-    //       width: 80,
-    //       height: 170,
-    //       thickness: 4.3,
-    //       heightFromFloor: 80,
-    //     },
-    //   },
-    // };
+    const id = v4();
+    const product: EpoxyProduct = {
+      id,
+      type: data.type,
+      name: data.name,
+      mainImageUrl: mainImageUrl,
+      imagesUrls: [],
+      properties: {
+        materials: {
+          resin: [data.resin],
+          wood: [data.wood],
+        },
+        dimensions: {
+          width: 80,
+          height: 170,
+          thickness: 4.3,
+          heightFromFloor: 80,
+        },
+      },
+    };
+
+    console.log(errors);
   };
 
   return (
@@ -99,7 +112,6 @@ export default function AddProductForm() {
       onSubmit={handleSubmit(onSubmit)}
       className="w-[500px] bg-indigo-200 p-2 rounded text-black"
     >
-      <p className="text-red-700 mb-2">{mainImageUrl}</p>
       <div>
         <p className="text-red-500">{statusMessage}</p>
       </div>
@@ -118,9 +130,13 @@ export default function AddProductForm() {
         <label htmlFor="mainImage">Главна снимка: </label>
         <input
           type="file"
-          {...register("mainImage")}
+          {...register("mainImage", {
+            required: "Главната снимка е задължителна",
+          })}
           id="mainImage"
           accept="image/*"
+          required
+
           // onChange={(e) => {
           //   if (e.target.files && e.target.files.length > 0) {
           //     const file = e.target.files[0];
@@ -168,7 +184,7 @@ export default function AddProductForm() {
           <input type="number" name='height-from-floor' id='height-from-floor' />
         </div>
       </div> */}
-      {/* <div className="mb-1">
+      <div className="my-5">
         <label htmlFor="images">Добави допълнителни снимки</label>
         <input
           type="file"
@@ -177,7 +193,7 @@ export default function AddProductForm() {
           id="images"
           accept="image/*"
         />
-      </div> */}
+      </div>
       <button className="bg-primary btn text-white">Добави</button>
     </form>
   );
