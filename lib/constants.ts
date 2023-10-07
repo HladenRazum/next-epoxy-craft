@@ -25,3 +25,5 @@ export const ResponseStatuses = {
   SUCCESS: "success",
   ERROR: "error",
 };
+
+export const JTW_MAX_AGE = 60 * 60 * 24 * 2; // 2 days

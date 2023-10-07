@@ -4,6 +4,15 @@
 
 @import url("./text-mask.css");
 
+@layer base {
+  input[type="number"],
+  input[type="text"],
+  input[type="password"],
+  select {
+    @apply rounded py-1;
+  }
+}
+
 @layer components {
   .wrapper {
     @apply w-full sm:max-w-[760px] md:max-w-[1024px] mx-auto;
@@ -19,6 +28,9 @@
   }
   .btn {
     @apply px-5 py-2 rounded;
+  }
+  .error-field {
+    @apply text-sm text-red-600;
   }
 }
 
@@ -39,14 +51,14 @@ body {
   background-color: var(--paper-color);
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --paper-color: #000000;
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
-}
+} */
 
 @media screen and (max-width: 768px) {
   ::-webkit-scrollbar {

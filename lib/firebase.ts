@@ -102,7 +102,6 @@ export async function updateProductsImages(
     imagesUrls: [...otherImages],
   });
 
-  console.log(docSnap);
   return docSnap;
 }
 

@@ -1,18 +1,63 @@
+import { loginSchema } from "@/lib/schemas";
 import { NextResponse } from "next/server";
+import { sign } from "jsonwebtoken";
+import { serialize } from "cookie";
+import { JTW_MAX_AGE } from "@/lib/constants";
 
-export async function GET(req: Request) {
+export async function POST(req: Request) {
   const body = await req.json();
+  const validatedData = loginSchema.safeParse(body);
 
-  const { username, password } = body;
+  if (validatedData.success) {
+    const { username, password } = validatedData!.data;
 
-  if (username !== "admin" || password !== "admin") {
+    // Compare the user
+    if (username === "123" && password === "123") {
+      const secret = process.env.NEXT_PUBLIC_JWT_SECRET || "";
+      const token = sign(
+        {
+          username,
+          password,
+        },
+        secret,
+        {
+          expiresIn: JTW_MAX_AGE,
+        }
+      );
+
+      const serialized = serialize("JWT_TOKEN", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        path: "/",
+        maxAge: JTW_MAX_AGE,
+      });
+
+      return new Response(
+        JSON.stringify({
+          message: "Успешно влизане в системата",
+          status: "success",
+          statusCode: 200,
+        }),
+        {
+          headers: {
+            "Set-Cookie": serialized,
+          },
+          status: 200,
+        }
+      );
+    } else {
+      return NextResponse.json({
+        message: "Невалидни данни за потребител/парола",
+        status: "error",
+        statusCode: 401,
+      });
+    }
+  } else {
     return NextResponse.json({
-      message: "unauthorized",
-      status: 401,
+      message: JSON.parse(validatedData.error.message),
+      status: "error",
+      statusCode: 401,
     });
   }
 }
-
-// export async function GET(req: Request) {
-//    console.log(req);
-// }
