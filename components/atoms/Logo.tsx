@@ -1,3 +1,6 @@
+import { Routes } from "@/lib/constants";
+import Link from "next/link";
+
 export default function Logo() {
-   return <div className="hidden sm:block">ВИЛМАР ЛОГО</div>;
+  return <Link href={Routes.HOME}>ВИЛМАР ЛОГО</Link>;
 }

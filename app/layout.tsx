@@ -25,7 +25,7 @@ export default function RootLayout({
       <body className={roboto.className}>
         <div className="flex flex-col min-h-screen">
           <Navigation />
-          {children}
+          <div className="flex-1">{children}</div>
           <Footer />
         </div>
       </body>

@@ -1,8 +1,18 @@
 export const NAV_LINKS: NavLinkType[] = [
   { name: "home", href: "/", text: "Начало" },
   { name: "contact", href: "/#contact", text: "Контакти" },
-  { name: "dashboard", href: "/dashboard", text: "Контролен Панел" },
 ];
+
+export enum Routes {
+  HOME = "/",
+  DASHBOARD = "/dashboard",
+  LOGIN = "/auth/login",
+  LOGOUT = "/auth/logout",
+  API_LOGIN = "/api/auth/login",
+  API_LOGOUT = "/api/auth/logout",
+  API_ME = "/api/auth/me",
+  FORBIDDEN = "/forbidden",
+}
 
 export type NavLinkType = {
   href: string;
@@ -16,9 +26,10 @@ export const TERMS = {
   TABLE: "маса",
 };
 
-export const FirebaseFiles = {
-  FIRESTORE_DOCUMENTS_FOLDER: "products",
-  STORAGE_IMAGES_FOLDER: "product-images",
+export const FirebaseCollections = {
+  FIRESTORE_DOCUMENTS: "products",
+  STORAGE_IMAGES: "product-images",
+  USERS: "users",
 };
 
 export const ResponseStatuses = {
@@ -27,3 +38,4 @@ export const ResponseStatuses = {
 };
 
 export const JTW_MAX_AGE = 60 * 60 * 24 * 2; // 2 days
+export const AUTH_COOKIE = "JWT_TOKEN";

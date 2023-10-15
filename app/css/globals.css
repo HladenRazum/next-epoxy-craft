@@ -15,7 +15,7 @@
 
 @layer components {
   .wrapper {
-    @apply w-full sm:max-w-[760px] md:max-w-[1024px] mx-auto;
+    @apply w-full sm:max-w-[760px] px-1 md:max-w-[1024px] mx-auto;
   }
   .bb {
     @apply border-neutral-700 border-b;
@@ -51,14 +51,14 @@ body {
   background-color: var(--paper-color);
 }
 
-/* @media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) {
   :root {
     --paper-color: #000000;
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
-} */
+}
 
 @media screen and (max-width: 768px) {
   ::-webkit-scrollbar {

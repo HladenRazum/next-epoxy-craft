@@ -1,4 +1,3 @@
-import React from "react";
 import Gallery from "./components/Gallery";
 import { getAllProductIds, getProductById } from "@/lib/firebase";
 import InvalidAddress from "@/components/atoms/InvalidAddress";
@@ -21,7 +20,7 @@ export default async function ProductPage({
 
   return (
     <div>
-      <main className="flex flex-col md:grid grid-cols-5 py-20">
+      <main className="wrapper flex flex-col md:grid grid-cols-5 py-20">
         <div className="col-span-3">
           <Gallery
             mainImageUrl={product.mainImageUrl}

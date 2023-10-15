@@ -5,13 +5,15 @@ import {
   getDoc,
   getDocs,
   getFirestore,
+  limit,
   query,
   setDoc,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { v4 } from "uuid";
 import { firebaseCofig } from "./firebase.config";
-import { FirebaseFiles, ResponseStatuses } from "./constants";
+import { FirebaseCollections, ResponseStatuses } from "./constants";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 const app = initializeApp(firebaseCofig);
@@ -21,7 +23,7 @@ export async function uploadImage(image: File) {
   const storage = getStorage();
   const imageRef = ref(
     storage,
-    `${FirebaseFiles.STORAGE_IMAGES_FOLDER}/${image.name}`
+    `${FirebaseCollections.STORAGE_IMAGES}/${image.name}`
   );
 
   let response;
@@ -75,7 +77,7 @@ export async function uploadSelectedImages(images: File[]) {
 
 export async function getAllProductIds() {
   let productsIds: string[] = [];
-  const q = query(collection(db, "products"));
+  const q = query(collection(db, FirebaseCollections.FIRESTORE_DOCUMENTS));
   const qSnapShot = await getDocs(q);
 
   qSnapShot.forEach((doc) => {
@@ -96,7 +98,7 @@ export async function updateProductsImages(
   mainImageUrl: string,
   otherImages: string[]
 ) {
-  const docRef = doc(db, FirebaseFiles.FIRESTORE_DOCUMENTS_FOLDER, productId);
+  const docRef = doc(db, FirebaseCollections.FIRESTORE_DOCUMENTS, productId);
   const docSnap = await updateDoc(docRef, {
     mainImageUrl,
     imagesUrls: [...otherImages],
@@ -106,14 +108,14 @@ export async function updateProductsImages(
 }
 
 export async function getProductById(productId: string): Promise<EpoxyProduct> {
-  const docRef = doc(db, FirebaseFiles.FIRESTORE_DOCUMENTS_FOLDER, productId);
+  const docRef = doc(db, FirebaseCollections.FIRESTORE_DOCUMENTS, productId);
   const docSnap = await getDoc(docRef);
   return docSnap.data() as EpoxyProduct;
 }
 
 export async function getAllProducts() {
   let products: HomepageProduct[] = [];
-  const q = query(collection(db, FirebaseFiles.FIRESTORE_DOCUMENTS_FOLDER));
+  const q = query(collection(db, FirebaseCollections.FIRESTORE_DOCUMENTS));
   const qSnapShot = await getDocs(q);
 
   qSnapShot.forEach((doc) => {
@@ -140,7 +142,7 @@ export async function addProduct(product: Omit<EpoxyProduct, "id">) {
 
   try {
     await setDoc(
-      doc(db, FirebaseFiles.FIRESTORE_DOCUMENTS_FOLDER, id),
+      doc(db, FirebaseCollections.FIRESTORE_DOCUMENTS, id),
       newProduct
     );
     return {
@@ -154,5 +156,23 @@ export async function addProduct(product: Omit<EpoxyProduct, "id">) {
       message: err.message || JSON.stringify(err, null, 1),
       productId: null,
     };
+  }
+}
+
+export async function userExistsInFirebase(user: User): Promise<boolean> {
+  // Check users collection in Firebase and look for the user by username
+  const usersRef = collection(db, FirebaseCollections.USERS);
+  const q = query(usersRef, where("username", "==", user.username), limit(1));
+  const querySnapshot = await getDocs(q);
+
+  // If the username exists, compare passwords
+  if (querySnapshot.docs.length > 0) {
+    // If username and password matches return true else return false
+    if (querySnapshot.docs.at(0)?.get("password") === user.password) {
+      return true;
+    } else return false;
+  } else {
+    // User not found
+    return false;
   }
 }

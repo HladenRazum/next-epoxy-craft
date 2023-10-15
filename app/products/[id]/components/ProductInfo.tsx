@@ -1,5 +1,4 @@
 import { getFormattedStringFromArray } from "@/lib/utils";
-import React from "react";
 
 type Props = {
   product: EpoxyProduct;

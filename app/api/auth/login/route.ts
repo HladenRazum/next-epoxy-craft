@@ -2,7 +2,8 @@ import { loginSchema } from "@/lib/schemas";
 import { NextResponse } from "next/server";
 import { sign } from "jsonwebtoken";
 import { serialize } from "cookie";
-import { JTW_MAX_AGE } from "@/lib/constants";
+import { AUTH_COOKIE, JTW_MAX_AGE } from "@/lib/constants";
+import { userExistsInFirebase } from "@/lib/firebase";
 
 export async function POST(req: Request) {
   const body = await req.json();
@@ -12,7 +13,7 @@ export async function POST(req: Request) {
     const { username, password } = validatedData!.data;
 
     // Compare the user
-    if (username === "123" && password === "123") {
+    if (await userExistsInFirebase({ username, password })) {
       const secret = process.env.NEXT_PUBLIC_JWT_SECRET || "";
       const token = sign(
         {
@@ -25,7 +26,7 @@ export async function POST(req: Request) {
         }
       );
 
-      const serialized = serialize("JWT_TOKEN", token, {
+      const serialized = serialize(AUTH_COOKIE, token, {
         httpOnly: true,
         secure: true,
         sameSite: "strict",
