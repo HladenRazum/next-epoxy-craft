@@ -26,10 +26,10 @@ export const loginSchema = z.object({
 });
 
 export const addProductFormSchema = z.object({
-  name: z.string().trim().min(5, "Name must be at least 5 characters long"),
+  name: z.string().trim().min(1, "Полето е задължително"),
   type: z.enum(["table", "cutting-board", "table-top"], {
     errorMap: () => {
-      return { message: "Please select valid product type" };
+      return { message: "Моля изберете валиден тип" };
     },
   }), //TODO: inherit values from the type
 });

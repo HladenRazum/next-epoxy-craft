@@ -11,6 +11,10 @@
   select {
     @apply rounded py-1;
   }
+
+  h1 {
+    @apply text-3xl;
+  }
 }
 
 @layer components {

@@ -3,12 +3,11 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { addProduct, uploadImage, uploadSelectedImages } from "@/lib/firebase";
 import { ResponseStatuses } from "@/lib/constants";
-import { useEffect, useState } from "react";
 import { ErrorMessage } from "@hookform/error-message";
 import { addProductFormSchema, loginSchema } from "@/lib/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-type FormFields = {
+export type FormFields = {
   type: EpoxyProductType;
   name: string;
   wood: string;
@@ -23,10 +22,11 @@ export default function AddProductForm() {
     register,
     handleSubmit,
     reset,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = useForm<FormFields>();
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
+    console.log(data);
     const mainImageFile = data.mainImage[0];
     // 1. Upload main image and get downloadUrl
     const uploadMainImageResponse = await uploadImage(mainImageFile);
@@ -70,12 +70,8 @@ export default function AddProductForm() {
       <h2 className="text-xl text-primary">Добави продукт</h2>
       <div className="mb-1">
         <label htmlFor="name">Име на продукта: </label>
-        <input
-          className="text-2xl bg-transparent "
-          {...register("name")}
-          type="text"
-          id="name"
-        />
+        <input {...register("name")} type="text" id="name" />
+        <ErrorMessage name="name" errors={errors} />
       </div>
 
       <select

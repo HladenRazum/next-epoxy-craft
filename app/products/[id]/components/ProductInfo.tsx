@@ -11,7 +11,7 @@ export default function ProductInfo({ product }: Props) {
 
   return (
     <>
-      <h1 className="text-4xl mb-1 font-bold text-primary">{product.name}</h1>
+      <h1 className="font-bold text-primary">{product.name}</h1>
       <p className="text-xl mb-5">Маса от епоксидна смола Ocean Blue и орех</p>
       <div className="mb-5">
         <h2 className="text-lg">Материали</h2>

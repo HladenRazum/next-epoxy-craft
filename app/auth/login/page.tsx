@@ -92,53 +92,52 @@ export default function LoginPage() {
 
   return (
     <>
-      <main className="wrapper py-10 place-content-center grid">
-        <h1 className="text-5xl mb-5">Вход в системата</h1>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="w-full max-w-[500px] bg-indigo-200 p-2 rounded text-black"
-        >
-          <div className="mb-3">
-            <label htmlFor="username">Потребител: </label>
-            <br />
-            <input
-              className="w-full text-xl bg-transparent placeholder:text-neutral-500"
-              type="text"
-              {...register("username")}
-              id="username"
-              autoComplete="off"
-            />
-            <div className="error-field">
-              <ErrorMessage name="username" errors={errors} />
-            </div>
-          </div>
-          <div className="mb-5">
-            <label htmlFor="password">Парола: </label>
-            <br />
-            <input
-              className="w-full text-xl bg-transparent placeholder:text-neutral-500"
-              type="password"
-              {...register("password")}
-              id="password"
-              autoComplete="off"
-            />
-            <div className="error-field">
-              <ErrorMessage name="password" errors={errors} />
-            </div>
-          </div>
-          <button
-            className="bg-primary btn text-white disabled:bg-neutral-500"
-            type="submit"
-            disabled={isSubmitting}
+      <main className="wrapper py-10">
+        <div className="place-content-center grid">
+          <h1 className="mb-4">Вход в системата</h1>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="w-full min-w-[360px] max-w-[500px] bg-indigo-200 p-2 rounded text-black"
           >
-            {isSubmitting ? "Влизане..." : "Вход в системата"}
-          </button>
-        </form>
+            <div className="mb-3">
+              <label htmlFor="username">Потребител: </label>
+              <br />
+              <input
+                className="w-full text-xl bg-transparent placeholder:text-neutral-500"
+                type="text"
+                {...register("username")}
+                id="username"
+                autoComplete="off"
+              />
+              <div className="error-field">
+                <ErrorMessage name="username" errors={errors} />
+              </div>
+            </div>
+            <div className="mb-5">
+              <label htmlFor="password">Парола: </label>
+              <br />
+              <input
+                className="w-full text-xl bg-transparent placeholder:text-neutral-500"
+                type="password"
+                {...register("password")}
+                id="password"
+                autoComplete="off"
+              />
+              <div className="error-field">
+                <ErrorMessage name="password" errors={errors} />
+              </div>
+            </div>
+            <button
+              className="bg-primary btn text-white disabled:bg-neutral-500"
+              type="submit"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Влизане..." : "Вход в системата"}
+            </button>
+          </form>
+        </div>
       </main>
       {notification.status !== null && notificationEl}
-      <Link className="text-red-500" href={Routes.LOGOUT}>
-        Изход от системата
-      </Link>
     </>
   );
 }

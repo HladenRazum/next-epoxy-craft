@@ -1,6 +1,6 @@
 import Gallery from "./components/Gallery";
 import { getAllProductIds, getProductById } from "@/lib/firebase";
-import InvalidAddress from "@/components/atoms/InvalidAddress";
+import InvalidAddress from "@/components/molecules/InvalidAddress";
 import { TERMS } from "@/lib/constants";
 import ProductInfo from "./components/ProductInfo";
 
