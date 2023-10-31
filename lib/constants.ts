@@ -5,7 +5,7 @@ export const NAV_LINKS: NavLinkType[] = [
 
 export enum Routes {
   HOME = "/",
-  DASHBOARD = "/dashboard",
+  CONTROL_PANEL = "/control-panel",
   LOGIN = "/auth/login",
   LOGOUT = "/auth/logout",
   API_LOGIN = "/api/auth/login",

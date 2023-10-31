@@ -81,7 +81,7 @@ export default function LoginPage() {
         <p className=" text-green-500 mb-5">Успешно влизане в системата</p>
         <Link
           className="text-blue-500 text-2xl underline"
-          href={Routes.DASHBOARD}
+          href={Routes.CONTROL_PANEL}
         >
           Контролен панел
         </Link>

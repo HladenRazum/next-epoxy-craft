@@ -1,6 +1,6 @@
 import AddProductForm from "./components/AddProductForm";
 
-export default function DashboardPage() {
+export default function ControlPanelPage() {
   return (
     <div className="py-20">
       <h1 className="mb-10 text-center">Контролен Панел</h1>

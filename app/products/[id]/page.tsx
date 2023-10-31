@@ -7,7 +7,7 @@ import ProductInfo from "./components/ProductInfo";
 export default async function ProductPage({
   params,
 }: {
-  params: { id: string };
+  params: { id: string; };
 }) {
   const { id } = params;
   const productIds = await getAllProductIds();
@@ -42,7 +42,7 @@ export async function generateStaticParams() {
   return productIds;
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata({ params }: { params: { id: string; }; }) {
   const { id } = params;
   const product = await getProductById(id);
 
