@@ -23,7 +23,7 @@ const config: Config = {
         xs: "12px",
       },
       borderColor: {
-        default: "var(--border-color)",
+        DEFAULT: "var(--border-color)",
       },
     },
   },

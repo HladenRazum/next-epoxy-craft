@@ -22,13 +22,13 @@
     @apply w-full sm:max-w-[760px] px-1 md:max-w-[1024px] mx-auto;
   }
   .bb {
-    @apply border-default border-b;
+    @apply border-b;
   }
   .link {
     @apply text-primary underline font-light;
   }
   .bt {
-    @apply border-default border-t;
+    @apply border-t;
   }
   .btn {
     @apply px-6 py-3 rounded;
