@@ -1,10 +1,10 @@
-import Image from "next/image";
-import Link from "next/link";
-import MasonryGrid from "./MasonryGrid";
-import { getAllProducts } from "@/lib/firebase";
+import Image from "next/image"
+import Link from "next/link"
+import MasonryGrid from "./MasonryGrid"
+import { getAllProducts } from "@/lib/firebase"
 
 export default async function GallerySection() {
-  const products = await getAllProducts();
+  const products = await getAllProducts()
 
   return (
     <section className="wrapper py-20">
@@ -18,5 +18,5 @@ export default async function GallerySection() {
       </MasonryGrid>
       <button>Get more items</button>
     </section>
-  );
+  )
 }

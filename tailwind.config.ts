@@ -1,4 +1,4 @@
-import type { Config } from "tailwindcss";
+import type { Config } from "tailwindcss"
 
 const config: Config = {
   content: [
@@ -16,14 +16,18 @@ const config: Config = {
       colors: {
         primary: "var(--primary-color)",
         paper: "var(--paper-color)",
+        "paper-secondary": "var(--paper-secondary-color)",
         disabled: 'calc("var(--primary-color) + 0.5)',
       },
       fontSize: {
         xs: "12px",
       },
+      borderColor: {
+        default: "var(--border-color)",
+      },
     },
   },
 
   plugins: [require("@tailwindcss/forms")],
-};
-export default config;
+}
+export default config

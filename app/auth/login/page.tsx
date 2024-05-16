@@ -1,31 +1,32 @@
-"use client";
+"use client"
 
-import axios from "axios";
-import type { AxiosError } from "axios";
-import { loginSchema } from "@/lib/schemas";
-import { ErrorMessage } from "@hookform/error-message";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import type { SubmitHandler } from "react-hook-form";
-import { useState } from "react";
-import { Routes } from "@/lib/constants";
-import Link from "next/link";
+import axios from "axios"
+import type { AxiosError } from "axios"
+import { loginSchema } from "@/lib/schemas"
+import { ErrorMessage } from "@hookform/error-message"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import type { SubmitHandler } from "react-hook-form"
+import { useState } from "react"
+import { Routes } from "@/lib/constants"
+import Link from "next/link"
+import { redirect } from "next/navigation"
 
 type FormFields = {
-  username: string;
-  password: string;
-};
+  username: string
+  password: string
+}
 
 type Notification = {
-  status: null | "success" | "error";
-  message: null | string;
-};
+  status: null | "success" | "error"
+  message: null | string
+}
 
 export default function LoginPage() {
   const [notification, setNotification] = useState<Notification>({
     status: null,
     message: null,
-  });
+  })
 
   const {
     register,
@@ -34,46 +35,48 @@ export default function LoginPage() {
     formState: { isSubmitting, errors },
   } = useForm<FormFields>({
     resolver: zodResolver(loginSchema),
-  });
+  })
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
     try {
-      const res = await axios.post(Routes.API_LOGIN, data);
+      const res = await axios.post(Routes.API_LOGIN, data)
 
       if (!res.data.status) {
         setNotification({
           message: "Нещо се обърка",
           status: "error",
-        });
-        throw new Error("Нещо се обърка");
+        })
+        throw new Error("Нещо се обърка")
       }
 
       if (res.status !== 200) {
-        throw new Error("Нещо се обърка");
+        throw new Error("Нещо се обърка")
       }
 
       if (res.data.statusCode == 401) {
-        throw new Error(res.data.message ?? "Неуспешно влизане в системата");
+        throw new Error(res.data.message ?? "Неуспешно влизане в системата")
       }
 
-      if (res.data && res.data.statusCode == 200) {
-        setNotification({
-          message: "Успешно влизане в системата",
-          status: "success",
-        });
-      }
+      setNotification({
+        message: "Успешно влизане в системата",
+        status: "success",
+      })
+
+      setTimeout(() => {
+        redirect(Routes.CONTROL_PANEL)
+      }, 3000)
     } catch (e) {
-      const error = e as AxiosError;
-      console.log(e);
+      const error = e as AxiosError
+      console.log(e)
 
       setNotification({
         message: error.message,
         status: "error",
-      });
+      })
     }
 
-    reset();
-  };
+    reset()
+  }
 
   const notificationEl =
     notification.status === "success" ? (
@@ -88,7 +91,7 @@ export default function LoginPage() {
       </div>
     ) : (
       <p className="pb-5 text-red-500 text-center">{notification.message}</p>
-    );
+    )
 
   return (
     <>
@@ -139,5 +142,5 @@ export default function LoginPage() {
       </main>
       {notification.status !== null && notificationEl}
     </>
-  );
+  )
 }
