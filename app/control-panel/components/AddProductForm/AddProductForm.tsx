@@ -5,8 +5,8 @@ import { SubmitHandler, useForm } from "react-hook-form"
 import { addProduct, uploadImage, uploadSelectedImages } from "@/lib/firebase"
 import { ResponseStatuses } from "@/lib/constants"
 import { ErrorMessage } from "@hookform/error-message"
-import FormSection from "./FormSection"
 import MulitpleOptionsInput from "@/components/organisms/MultipleOptionsInput/MulitpleOptionsInput"
+import FormSection from "./FormSection"
 
 export type FormFields = {
   type: EpoxyProductType
@@ -23,6 +23,8 @@ export default function AddProductForm() {
     register,
     handleSubmit,
     reset,
+    setValue,
+    getValues,
     formState: { isSubmitting, errors },
   } = useForm<FormFields>()
 
@@ -36,7 +38,16 @@ export default function AddProductForm() {
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
     console.log(data)
+
     const mainImageFile = data.mainImage[0]
+
+    // try {
+    //   await Promise.all([uploadImage(mainImageFile), uploadSelectedImages(data.images)]);
+    //   console.log("Images uploaded successfully")
+    // } catch (error) {
+    //   console.error("Error uploading images -" + error);
+    // }
+
     const uploadMainImageResponse = await uploadImage(mainImageFile)
     const otherImagesUrls = await uploadSelectedImages(data.images)
 
@@ -75,6 +86,16 @@ export default function AddProductForm() {
     // }
     // reset()
     // 4. ??? Notify the user and give a link to the new page
+  }
+
+  const handleOnAddWoodOption = (value: string) => {
+    const prevOptions = getValues("wood") || []
+    setValue("wood", [...prevOptions, value])
+  }
+
+  const handleOnAddResinOption = (value: string) => {
+    const prevOptions = getValues("resin") || []
+    setValue("resin", [...prevOptions, value])
   }
 
   return (
@@ -116,8 +137,18 @@ export default function AddProductForm() {
 
         <FormSection title="Материали">
           <div className="form-cols-row">
-            <MulitpleOptionsInput label="Вид дърво" name="wood" />
-            <MulitpleOptionsInput label="Вид смола" name="resin" />
+            <MulitpleOptionsInput
+              getOptions={() => getValues("wood")}
+              onAddOption={handleOnAddWoodOption}
+              label="Вид дърво"
+              name="wood"
+            />
+            <MulitpleOptionsInput
+              getOptions={() => getValues("resin")}
+              onAddOption={handleOnAddResinOption}
+              label="Вид смола"
+              name="resin"
+            />
             {/* <div>
               <label className="text-sm" htmlFor="resin">
                 Смола:{" "}
@@ -132,7 +163,7 @@ export default function AddProductForm() {
           </div>
         </FormSection>
 
-        <FormSection title="Размери в сантиметри">
+        {/* <FormSection title="Размери в сантиметри">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 items-end">
             <div>
               <label className="text-sm" htmlFor="width">
@@ -224,7 +255,7 @@ export default function AddProductForm() {
               />
             </div>
           </div>
-        </FormSection>
+        </FormSection> */}
 
         <div className="mt-5">
           <button

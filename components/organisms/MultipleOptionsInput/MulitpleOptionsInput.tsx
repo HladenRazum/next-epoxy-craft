@@ -6,19 +6,28 @@ import { ChangeEvent, KeyboardEvent, useState } from "react"
 type Props = {
   label: string
   name: string
+  getOptions: () => string[]
+  onAddOption: (option: string) => void
 }
 
-const MulitpleOptionsInput = ({ label, name }: Props) => {
+const MulitpleOptionsInput = ({
+  label,
+  name,
+  getOptions,
+  onAddOption,
+}: Props) => {
   const [value, setValue] = useState("")
-  const [items, setItems] = useState<string[]>([])
+  const [options, setOptions] = useState(() => getOptions())
 
   const handleOnAddItem = () => {
     if (value.trim().length === 0) {
       return
     }
 
-    setItems((prev) => [...prev, value.toLowerCase()])
+    onAddOption(value.toLowerCase())
     setValue("")
+    // Trigger a rerender
+    setOptions(getOptions())
   }
 
   const handleOnChangeValue = (e: ChangeEvent<HTMLInputElement>) => {
@@ -33,33 +42,33 @@ const MulitpleOptionsInput = ({ label, name }: Props) => {
   }
 
   return (
-    <div className="">
+    <div>
       <label className="text-sm" htmlFor={name}>
         {label}
       </label>
-      <div className="relative items-center flex px-2 bg-white input justify-between mb-2">
+      <div className="items-center rounded border flex pl-3 pr-1 bg-white justify-between mb-2">
         <input
           id={name}
           type="text"
+          className="bg-transparent p-0 min-w-0 border-none focus:border-transparent focus:ring-0"
           onKeyDown={handleOnKeyDown}
           onChange={handleOnChangeValue}
           value={value}
-          className="pl-1 bg-transparent border-none focus:border-transparent flex-1 focus:ring-0"
           placeholder="..."
           autoComplete="false"
         />
         <button
           type="button"
           onClick={handleOnAddItem}
-          className="border flex items-center p-1 text-sm bg-neutral-200 rounded"
+          className="border block p-1 text-sm bg-neutral-200 rounded"
         >
           Добави
         </button>
       </div>
       <ul className="flex gap-1 flex-wrap">
-        {items.map((item, i) => (
-          <li key={item + i}>
-            <Chip className="bg-neutral-800 text-white" text={item} />
+        {options?.map((option, i) => (
+          <li key={option + i}>
+            <Chip className="bg-neutral-800 text-white" text={option} />
           </li>
         ))}
       </ul>

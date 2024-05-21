@@ -8,9 +8,9 @@
   input[type="number"],
   input[type="text"],
   input[type="password"],
-  .input,
   select {
-    @apply rounded py-1;
+    @apply rounded py-2;
+    max-width: 100%;
   }
 
   h1 {
