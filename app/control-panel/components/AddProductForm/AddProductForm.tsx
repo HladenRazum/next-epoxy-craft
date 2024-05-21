@@ -95,6 +95,11 @@ export default function AddProductForm() {
 
   const handleOnAddResinOption = (value: string) => {
     const prevOptions = getValues("resin") || []
+
+    if (prevOptions.includes(value)) {
+      return
+    }
+
     setValue("resin", [...prevOptions, value])
   }
 
@@ -106,31 +111,35 @@ export default function AddProductForm() {
         className="w-full max-w-[600px] bg-blue-200 p-5 rounded text-black"
       >
         <FormSection title="Информация за продукта">
-          <div>
-            <label className="text-sm" htmlFor="type">
-              Вид продукт:
-            </label>
-            <select
-              title="Product type"
-              className="text-black mb-1"
-              {...register("type")}
-              id="type"
-            >
-              <option value="table">маса</option>
-              <option value="cutting-board">дъска за рязане</option>
-              <option value="table-top">плот</option>
-            </select>
-          </div>
-          <div className="flex-grow">
-            <label className="text-sm" htmlFor="name">
-              Име на продукта:{" "}
-            </label>
-            <input
-              className="w-full"
-              {...register("name")}
-              type="text"
-              id="name"
-            />
+          <div className="flex gap-2 w-full">
+            <div className="flex-1">
+              <label className="text-sm" htmlFor="name">
+                Име на продукта:{" "}
+              </label>
+              <input
+                className="w-full"
+                {...register("name")}
+                required
+                type="text"
+                id="name"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm" htmlFor="type">
+                Вид продукт:
+              </label>
+              <select
+                title="Product type"
+                className="text-black mb-1"
+                {...register("type")}
+                id="type"
+              >
+                <option value="table">маса</option>
+                <option value="cutting-board">дъска за рязане</option>
+                <option value="table-top">плот</option>
+              </select>
+            </div>
             <ErrorMessage name="name" errors={errors} />
           </div>
         </FormSection>

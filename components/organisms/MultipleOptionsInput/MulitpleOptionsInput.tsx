@@ -1,7 +1,8 @@
 "use client"
 
 import Chip from "@/components/atoms/Chip"
-import { ChangeEvent, KeyboardEvent, useState } from "react"
+import { cn } from "@/lib/utils"
+import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react"
 
 type Props = {
   label: string
@@ -18,13 +19,14 @@ const MulitpleOptionsInput = ({
 }: Props) => {
   const [value, setValue] = useState("")
   const [options, setOptions] = useState(() => getOptions())
+  const [isFocused, setIsFocused] = useState(false)
 
   const handleOnAddItem = () => {
     if (value.trim().length === 0) {
       return
     }
 
-    onAddOption(value.toLowerCase())
+    onAddOption(value)
     setValue("")
     // Trigger a rerender
     setOptions(getOptions())
@@ -46,7 +48,12 @@ const MulitpleOptionsInput = ({
       <label className="text-sm" htmlFor={name}>
         {label}
       </label>
-      <div className="items-center rounded border flex pl-3 pr-1 bg-white justify-between mb-2">
+      <div
+        className={cn(
+          "items-center rounded border flex pl-3 pr-1 bg-white justify-between mb-2",
+          isFocused ? "ring-2 ring-primary" : null
+        )}
+      >
         <input
           id={name}
           type="text"
@@ -56,6 +63,8 @@ const MulitpleOptionsInput = ({
           value={value}
           placeholder="..."
           autoComplete="false"
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
         />
         <button
           type="button"
