@@ -44,7 +44,7 @@ const MulitpleOptionsInput = ({
   }
 
   return (
-    <div>
+    <div className="relative">
       <label className="text-sm" htmlFor={name}>
         {label}
       </label>
@@ -81,6 +81,16 @@ const MulitpleOptionsInput = ({
           </li>
         ))}
       </ul>
+      {options?.length > 0 ? (
+        <button
+          onClick={(e) => {
+            e.preventDefault()
+          }}
+          className="text-xs text-primary underline absolute right-0 top-0"
+        >
+          изчисти
+        </button>
+      ) : null}
     </div>
   )
 }

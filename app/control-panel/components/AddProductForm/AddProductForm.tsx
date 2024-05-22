@@ -1,22 +1,15 @@
 "use client"
 
 import { useState } from "react"
-import { SubmitHandler, useForm } from "react-hook-form"
+import { SubmitHandler, useForm, Controller } from "react-hook-form"
 import { addProduct, uploadImage, uploadSelectedImages } from "@/lib/firebase"
 import { ResponseStatuses } from "@/lib/constants"
 import { ErrorMessage } from "@hookform/error-message"
 import MulitpleOptionsInput from "@/components/organisms/MultipleOptionsInput/MulitpleOptionsInput"
 import FormSection from "./FormSection"
-
-export type FormFields = {
-  type: EpoxyProductType
-  name: string
-  wood: string[]
-  resin: string[]
-  mainImage: File[]
-  images: File[]
-  dimensions: Dimensions
-}
+import { AddProductFormFields } from "./types"
+import { addProductFormSchema } from "@/lib/schemas"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 export default function AddProductForm() {
   const {
@@ -25,9 +18,12 @@ export default function AddProductForm() {
     reset,
     setValue,
     getValues,
-    formState: { isSubmitting, errors },
-  } = useForm<FormFields>()
+    trigger,
 
+    formState: { isSubmitting, errors, isValid },
+  } = useForm<AddProductFormFields>({
+    resolver: zodResolver(addProductFormSchema),
+  })
   const [notification, setNotification] = useState<{
     type: "success" | "error" | null
     text: string
@@ -36,8 +32,9 @@ export default function AddProductForm() {
     text: "",
   })
 
-  const onSubmit: SubmitHandler<FormFields> = async (data) => {
-    console.log(data)
+  const onSubmit: SubmitHandler<AddProductFormFields> = async (data) => {
+    console.log("submit")
+    return
 
     const mainImageFile = data.mainImage[0]
 
@@ -89,18 +86,29 @@ export default function AddProductForm() {
   }
 
   const handleOnAddWoodOption = (value: string) => {
-    const prevOptions = getValues("wood") || []
-    setValue("wood", [...prevOptions, value])
-  }
-
-  const handleOnAddResinOption = (value: string) => {
-    const prevOptions = getValues("resin") || []
+    const prevOptions = getValues("materials.wood") || []
 
     if (prevOptions.includes(value)) {
       return
     }
 
-    setValue("resin", [...prevOptions, value])
+    setValue("materials.wood", [...prevOptions, value], {
+      shouldValidate: true,
+      shouldTouch: true,
+    })
+  }
+
+  const handleOnAddResinOption = (value: string) => {
+    const prevOptions = getValues("materials.resin") || []
+
+    if (prevOptions.includes(value)) {
+      return
+    }
+
+    setValue("materials.resin", [...prevOptions, value], {
+      shouldValidate: true,
+      shouldTouch: true,
+    })
   }
 
   return (
@@ -111,7 +119,7 @@ export default function AddProductForm() {
         className="w-full max-w-[600px] bg-blue-200 p-5 rounded text-black"
       >
         <FormSection title="Информация за продукта">
-          <div className="flex gap-2 w-full">
+          <div className="flex gap-2 w-full relative">
             <div className="flex-1">
               <label className="text-sm" htmlFor="name">
                 Име на продукта:{" "}
@@ -124,6 +132,11 @@ export default function AddProductForm() {
                 id="name"
               />
             </div>
+            {errors.name && (
+              <span className="text-sm text-red-600 absolute -bottom-5">
+                {errors.name.message}
+              </span>
+            )}
 
             <div>
               <label className="text-sm" htmlFor="type">
@@ -140,39 +153,34 @@ export default function AddProductForm() {
                 <option value="table-top">плот</option>
               </select>
             </div>
-            <ErrorMessage name="name" errors={errors} />
           </div>
         </FormSection>
 
         <FormSection title="Материали">
-          <div className="form-cols-row">
+          <div className="form-cols-row relative">
             <MulitpleOptionsInput
-              getOptions={() => getValues("wood")}
+              getOptions={() => getValues("materials.wood")}
               onAddOption={handleOnAddWoodOption}
               label="Вид дърво"
               name="wood"
             />
+
             <MulitpleOptionsInput
-              getOptions={() => getValues("resin")}
+              getOptions={() => getValues("materials.resin")}
               onAddOption={handleOnAddResinOption}
               label="Вид смола"
               name="resin"
             />
-            {/* <div>
-              <label className="text-sm" htmlFor="resin">
-                Смола:{" "}
-              </label>
-              <input
-                className="w-full"
-                type="text"
-                id="resin"
-                {...register("resin")}
-              />
-            </div> */}
+
+            {errors.materials && (
+              <span className="text-sm text-red-600 absolute -bottom-5">
+                Полетата са задължителни
+              </span>
+            )}
           </div>
         </FormSection>
 
-        {/* <FormSection title="Размери в сантиметри">
+        <FormSection title="Размери в сантиметри">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 items-end">
             <div>
               <label className="text-sm" htmlFor="width">
@@ -233,7 +241,7 @@ export default function AddProductForm() {
           </div>
         </FormSection>
 
-        <FormSection title="Снимки">
+        {/* <FormSection title="Снимки">
           <div className="grid sm:grid-cols-2 gap-2 grid-cols-1">
             <div>
               <label htmlFor="mainImage" className="text-sm">
