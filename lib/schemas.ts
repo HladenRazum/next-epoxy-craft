@@ -34,12 +34,22 @@ export const addProductFormSchema = z.object({
     wood: z.array(z.string()).min(1, "Полето е задължително"),
     resin: z.array(z.string()).min(1, "Полето е задължително"),
   }),
-  dimensions: z.object({
-    width: z.number().min(1),
-    height: z.number().min(1),
-    thickness: z.number().min(1),
-    heightFromFloor: z.number().min(1),
-  }),
+  // dimensions: z.object({
+  //   width: z.number().min(1),
+  //   height: z.number().min(1),
+  //   thickness: z.number().min(1),
+  //   heightFromFloor: z.number().min(1),
+  // }),
 })
 
 export type Product = z.infer<typeof addProductFormSchema>
+export type Materials = z.infer<typeof addProductFormSchema.shape.materials>
+
+export const addProductFormDefaultValues: Product = {
+  name: "",
+  type: "table",
+  materials: {
+    wood: [],
+    resin: [],
+  },
+}
