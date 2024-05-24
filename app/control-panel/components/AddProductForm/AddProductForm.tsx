@@ -144,14 +144,26 @@ export default function AddProductForm() {
           </FormSection>
 
           <FormSection title="Материали">
-            <div className="form-cols-row relative">
-              <MulitpleOptionsInput label="Вид дърво" name="materials.wood" />
-              <MulitpleOptionsInput label="Вид смола" name="materials.resin" />
-              {/* {methods.formState.errors.materials && (
-                <span className="text-sm text-red-600 absolute -bottom-5">
-                  Полетата са задължителни
-                </span>
-              )} */}
+            <div className="form-cols-row">
+              <div className="relative">
+                <MulitpleOptionsInput label="Вид дърво" name="materials.wood" />
+                {methods.formState.errors.materials?.wood && (
+                  <span className="text-sm text-red-600 absolute -bottom-5">
+                    {methods.formState.errors.materials?.wood.message}
+                  </span>
+                )}
+              </div>
+              <div className="relative">
+                <MulitpleOptionsInput
+                  label="Вид смола"
+                  name="materials.resin"
+                />
+                {methods.formState.errors.materials?.resin && (
+                  <span className="text-sm text-red-600 absolute -bottom-5">
+                    {methods.formState.errors.materials?.resin.message}
+                  </span>
+                )}
+              </div>
             </div>
           </FormSection>
 

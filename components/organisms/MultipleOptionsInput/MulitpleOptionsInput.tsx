@@ -1,11 +1,10 @@
 "use client"
 
+import { ChangeEvent, KeyboardEvent, useEffect, useState } from "react"
+import { useFormContext } from "react-hook-form"
 import Chip from "@/components/atoms/Chip"
 import { Product } from "@/lib/schemas"
 import { cn } from "@/lib/utils"
-import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react"
-import { FieldValues, Path, useFormContext } from "react-hook-form"
-import { flushSync } from "react-dom"
 
 type Props = {
   label: string
@@ -13,12 +12,7 @@ type Props = {
 }
 
 function MulitpleOptionsInput({ label, name }: Props) {
-  const {
-    getValues,
-    setValue,
-
-    formState: { errors },
-  } = useFormContext<Product>()
+  const { getValues, setValue, trigger } = useFormContext<Product>()
 
   const [text, setText] = useState("")
   const [options, setOptions] = useState(getValues(name))
@@ -50,7 +44,8 @@ function MulitpleOptionsInput({ label, name }: Props) {
 
   useEffect(() => {
     setValue(name, options)
-  }, [options, name, setValue])
+    trigger(name)
+  }, [options, name, setValue, trigger])
 
   return (
     <>
@@ -102,8 +97,6 @@ function MulitpleOptionsInput({ label, name }: Props) {
             изчисти
           </button>
         ) : null}
-
-        {/*TODO: How to get the error message for this input  */}
       </div>
     </>
   )
