@@ -44,6 +44,7 @@ function MulitpleOptionsInput({ label, name }: Props) {
 
   useEffect(() => {
     setValue(name, options)
+
     trigger(name)
   }, [options, name, setValue, trigger])
 

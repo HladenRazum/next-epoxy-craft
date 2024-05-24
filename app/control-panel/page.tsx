@@ -1,5 +1,4 @@
 import AddProductForm from "./components/AddProductForm/AddProductForm"
-import Sidebar from "./components/Sidebar"
 
 export default function ControlPanelPage() {
   return (

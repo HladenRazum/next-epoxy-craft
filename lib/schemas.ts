@@ -1,4 +1,10 @@
 import { z } from "zod"
+import {
+  ACCEPTED_IMAGE_TYPES,
+  DIMENSIONS_DEFAULT_VALUES,
+  DIMENSIONS_MIN_VALUES,
+  MAX_FILE_SIZE_MB,
+} from "./constants"
 
 const envSchema = z.object({
   NEXT_PUBLIC_FIREBASE_API_KEY: z.string().optional(),
@@ -34,16 +40,50 @@ export const addProductFormSchema = z.object({
     wood: z.array(z.string()).min(1, "Полето е задължително"),
     resin: z.array(z.string()).min(1, "Полето е задължително"),
   }),
-  // dimensions: z.object({
-  //   width: z.number().min(1),
-  //   height: z.number().min(1),
-  //   thickness: z.number().min(1),
-  //   heightFromFloor: z.number().min(1),
-  // }),
+  dimensions: z.object({
+    width: z.coerce.number().min(DIMENSIONS_MIN_VALUES.width),
+    length: z.coerce.number().min(DIMENSIONS_MIN_VALUES.length),
+    thickness: z.coerce.number().min(DIMENSIONS_MIN_VALUES.thickness),
+    heightFromFloor: z.coerce
+      .number()
+      .min(DIMENSIONS_MIN_VALUES.heightFromFloor),
+  }),
+  mainImage: z
+    .any()
+    .refine((filesList) => filesList?.length > 0, "Полето е задължително")
+    .refine(
+      (filesList) => filesList[0]?.size <= MAX_FILE_SIZE_MB * 1000 * 1000,
+      `Размерът на снимката не трябва да надвишава ${MAX_FILE_SIZE_MB} MB`
+    )
+    .refine(
+      (filesList) =>
+        ACCEPTED_IMAGE_TYPES.includes(filesList[0]?.type.split("/")[1]),
+      `Невалиден тип на изображението. Моля използвайте файлове с разширения - ${ACCEPTED_IMAGE_TYPES.join(
+        " "
+      )}`
+    ),
+  images: z
+    .any()
+    .refine(
+      (filesList: FileList) =>
+        Array.from(filesList).every(
+          (file) => file?.size <= MAX_FILE_SIZE_MB * 1000 * 1000
+        ),
+      `Размерът на снимката не трябва да надвишава ${MAX_FILE_SIZE_MB} MB`
+    )
+    .refine(
+      (filesList: FileList) =>
+        Array.from(filesList).every((file) =>
+          ACCEPTED_IMAGE_TYPES.includes(file.type.split("/")[1])
+        ),
+      `Невалиден тип на изображението. Моля използвайте файлове с разширения - ${ACCEPTED_IMAGE_TYPES.join(
+        " "
+      )}`
+    )
+    .optional(),
 })
 
 export type Product = z.infer<typeof addProductFormSchema>
-export type Materials = z.infer<typeof addProductFormSchema.shape.materials>
 
 export const addProductFormDefaultValues: Product = {
   name: "",
@@ -52,4 +92,12 @@ export const addProductFormDefaultValues: Product = {
     wood: [],
     resin: [],
   },
+  dimensions: {
+    width: DIMENSIONS_DEFAULT_VALUES.width,
+    length: DIMENSIONS_DEFAULT_VALUES.length,
+    thickness: DIMENSIONS_DEFAULT_VALUES.thickness,
+    heightFromFloor: DIMENSIONS_DEFAULT_VALUES.heightFromFloor,
+  },
+  mainImage: "",
+  images: [],
 }

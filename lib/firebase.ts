@@ -1,4 +1,4 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp } from "firebase/app"
 import {
   collection,
   doc,
@@ -10,169 +10,169 @@ import {
   setDoc,
   updateDoc,
   where,
-} from "firebase/firestore";
-import { v4 } from "uuid";
-import { firebaseCofig } from "./firebase.config";
-import { FirebaseCollections, ResponseStatuses } from "./constants";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+} from "firebase/firestore"
+import { v4 } from "uuid"
+import { firebaseCofig } from "./firebase.config"
+import { FirebaseCollections, ResponseStatuses } from "./constants"
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage"
 
-const app = initializeApp(firebaseCofig);
-const db = getFirestore(app);
+const app = initializeApp(firebaseCofig)
+const db = getFirestore(app)
 
 export async function uploadImage(image: File) {
-  const storage = getStorage();
+  const storage = getStorage()
   const imageRef = ref(
     storage,
     `${FirebaseCollections.STORAGE_IMAGES}/${image.name}`
-  );
+  )
 
-  let response;
+  let response
   try {
-    let snapshot = await uploadBytes(imageRef, image);
+    let snapshot = await uploadBytes(imageRef, image)
     if (snapshot) {
-      const downloadUrl = await getDownloadURL(imageRef);
+      const downloadUrl = await getDownloadURL(imageRef)
 
       response = {
         status: ResponseStatuses.SUCCESS,
         message: "Снимката е качена успешно.",
         downloadUrl,
-      };
+      }
     } else {
-      throw new Error("Грешка при качването на снимката.");
+      throw new Error("Грешка при качването на снимката.")
     }
   } catch (error) {
     response = {
       status: ResponseStatuses.ERROR,
       message: JSON.stringify(error, null, 1),
-    };
+    }
   }
 
-  return response;
+  return response
 }
 
 export async function uploadSelectedImages(images: File[]) {
-  let imagesUrls: string[] = [];
-  let uploadFilesPromises = [];
+  let imagesUrls: string[] = []
+  let uploadFilesPromises = []
 
   for (const fileImage of images) {
-    uploadFilesPromises.push(uploadImage(fileImage));
+    uploadFilesPromises.push(uploadImage(fileImage))
   }
 
   await Promise.all([...uploadFilesPromises]).then((values) => {
     if (values.some((value) => value.status === ResponseStatuses.ERROR)) {
       console.log(
         "Грешка при качването на някоя от снимките към базата. Моля опитайте отново."
-      );
+      )
     } else {
       values.forEach((val) => {
         if (val.downloadUrl) {
-          imagesUrls.push(val.downloadUrl);
+          imagesUrls.push(val.downloadUrl)
         }
-      });
+      })
     }
-  });
+  })
 
-  return imagesUrls;
+  return imagesUrls
 }
 
 export async function getAllProductIds() {
-  let productsIds: string[] = [];
-  const q = query(collection(db, FirebaseCollections.FIRESTORE_DOCUMENTS));
-  const qSnapShot = await getDocs(q);
+  let productsIds: string[] = []
+  const q = query(collection(db, FirebaseCollections.FIRESTORE_DOCUMENTS))
+  const qSnapShot = await getDocs(q)
 
   qSnapShot.forEach((doc) => {
-    productsIds.push(doc.get("id"));
-  });
+    productsIds.push(doc.get("id"))
+  })
 
-  return productsIds;
+  return productsIds
 }
 
 export type HomepageProduct = {
-  id: string;
-  src: string;
-  name: string;
-};
+  id: string
+  src: string
+  name: string
+}
 
 export async function updateProductsImages(
   productId: string,
   mainImageUrl: string,
   otherImages: string[]
 ) {
-  const docRef = doc(db, FirebaseCollections.FIRESTORE_DOCUMENTS, productId);
+  const docRef = doc(db, FirebaseCollections.FIRESTORE_DOCUMENTS, productId)
   const docSnap = await updateDoc(docRef, {
     mainImageUrl,
     imagesUrls: [...otherImages],
-  });
+  })
 
-  return docSnap;
+  return docSnap
 }
 
 export async function getProductById(productId: string): Promise<EpoxyProduct> {
-  const docRef = doc(db, FirebaseCollections.FIRESTORE_DOCUMENTS, productId);
-  const docSnap = await getDoc(docRef);
-  return docSnap.data() as EpoxyProduct;
+  const docRef = doc(db, FirebaseCollections.FIRESTORE_DOCUMENTS, productId)
+  const docSnap = await getDoc(docRef)
+  return docSnap.data() as EpoxyProduct
 }
 
 export async function getAllProducts() {
-  let products: HomepageProduct[] = [];
-  const q = query(collection(db, FirebaseCollections.FIRESTORE_DOCUMENTS));
-  const qSnapShot = await getDocs(q);
+  let products: HomepageProduct[] = []
+  const q = query(collection(db, FirebaseCollections.FIRESTORE_DOCUMENTS))
+  const qSnapShot = await getDocs(q)
 
   qSnapShot.forEach((doc) => {
-    let product = {};
+    let product = {}
     Object.assign(product, {
       id: doc.get("id"),
       src: doc.get("mainImageUrl"),
       name: doc.get("name"),
-    });
+    })
 
-    products.push(product as HomepageProduct);
-  });
+    products.push(product as HomepageProduct)
+  })
 
-  return products;
+  return products
 }
 
 export async function addProduct(product: Omit<EpoxyProduct, "id">) {
-  const id = v4();
+  const id = v4()
 
   const newProduct: EpoxyProduct = {
     ...product,
     id,
-  };
+  }
 
   try {
     await setDoc(
       doc(db, FirebaseCollections.FIRESTORE_DOCUMENTS, id),
       newProduct
-    );
+    )
     return {
       status: ResponseStatuses.SUCCESS,
       message: "Продуктът е създаден.",
       productId: id,
-    };
+    }
   } catch (err: any) {
     return {
       status: ResponseStatuses.ERROR,
       message: err.message || JSON.stringify(err, null, 1),
       productId: null,
-    };
+    }
   }
 }
 
 export async function userExistsInFirebase(user: User): Promise<boolean> {
   // Check users collection in Firebase and look for the user by username
-  const usersRef = collection(db, FirebaseCollections.USERS);
-  const q = query(usersRef, where("username", "==", user.username), limit(1));
-  const querySnapshot = await getDocs(q);
+  const usersRef = collection(db, FirebaseCollections.USERS)
+  const q = query(usersRef, where("username", "==", user.username), limit(1))
+  const querySnapshot = await getDocs(q)
 
   // If the username exists, compare passwords
   if (querySnapshot.docs.length > 0) {
     // If username and password matches return true else return false
     if (querySnapshot.docs.at(0)?.get("password") === user.password) {
-      return true;
-    } else return false;
+      return true
+    } else return false
   } else {
     // User not found
-    return false;
+    return false
   }
 }

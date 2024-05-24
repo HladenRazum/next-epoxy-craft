@@ -10,6 +10,10 @@ import {
   addProductFormSchema,
 } from "@/lib/schemas"
 import { zodResolver } from "@hookform/resolvers/zod"
+import {
+  DIMENSIONS_DEFAULT_VALUES,
+  DIMENSIONS_MIN_VALUES,
+} from "@/lib/constants"
 
 export default function AddProductForm() {
   const methods = useForm<Product>({
@@ -18,8 +22,10 @@ export default function AddProductForm() {
     defaultValues: addProductFormDefaultValues,
   })
 
+  console.log(methods.formState.errors)
+
   const onSubmit: SubmitHandler<Product> = async (data) => {
-    console.log("submit")
+    console.log("Submitting... Data:" + data)
     return
 
     const mainImageFile = data.mainImage[0]
@@ -71,32 +77,6 @@ export default function AddProductForm() {
     // 4. ??? Notify the user and give a link to the new page
   }
 
-  // const handleOnAddWoodOption = (value: string) => {
-  //   const prevOptions = getValues("materials.wood") || []
-
-  //   if (prevOptions.includes(value)) {
-  //     return
-  //   }
-
-  //   setValue("materials.wood", [...prevOptions, value], {
-  //     shouldValidate: true,
-  //     shouldTouch: true,
-  //   })
-  // }
-
-  // const handleOnAddResinOption = (value: string) => {
-  //   const prevOptions = getValues("materials.resin") || []
-
-  //   if (prevOptions.includes(value)) {
-  //     return
-  //   }
-
-  //   setValue("materials.resin", [...prevOptions, value], {
-  //     shouldValidate: true,
-  //     shouldTouch: true,
-  //   })
-  // }
-
   return (
     <>
       <h2 className="text-xl mb-5">Добави продукт</h2>
@@ -114,13 +94,14 @@ export default function AddProductForm() {
                 <input
                   className="w-full"
                   {...methods.register("name")}
+                  autoComplete="false"
                   required
                   type="text"
                   id="name"
                 />
               </div>
               {methods.formState.errors.name && (
-                <span className="text-sm text-red-600 absolute -bottom-5">
+                <span className="text-sm text-error absolute -bottom-5">
                   {methods.formState.errors.name.message}
                 </span>
               )}
@@ -148,7 +129,7 @@ export default function AddProductForm() {
               <div className="relative">
                 <MulitpleOptionsInput label="Вид дърво" name="materials.wood" />
                 {methods.formState.errors.materials?.wood && (
-                  <span className="text-sm text-red-600 absolute -bottom-5">
+                  <span className="text-sm text-error absolute -bottom-5">
                     {methods.formState.errors.materials?.wood.message}
                   </span>
                 )}
@@ -159,7 +140,7 @@ export default function AddProductForm() {
                   name="materials.resin"
                 />
                 {methods.formState.errors.materials?.resin && (
-                  <span className="text-sm text-red-600 absolute -bottom-5">
+                  <span className="text-sm text-error absolute -bottom-5">
                     {methods.formState.errors.materials?.resin.message}
                   </span>
                 )}
@@ -167,7 +148,7 @@ export default function AddProductForm() {
             </div>
           </FormSection>
 
-          {/* <FormSection title="Размери в сантиметри">
+          <FormSection title="Размери в сантиметри">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 items-end">
               <div>
                 <label className="text-sm" htmlFor="width">
@@ -175,12 +156,12 @@ export default function AddProductForm() {
                 </label>
                 <input
                   type="number"
-                  {...register("dimensions.width")}
+                  {...methods.register("dimensions.width")}
                   id="width"
-                  min={1}
+                  min={DIMENSIONS_MIN_VALUES.width}
                   max={10000}
                   step={1}
-                  defaultValue={90}
+                  defaultValue={DIMENSIONS_DEFAULT_VALUES.width}
                 />
               </div>
               <div>
@@ -189,12 +170,12 @@ export default function AddProductForm() {
                 </label>
                 <input
                   type="number"
-                  {...register("dimensions.height")}
+                  {...methods.register("dimensions.length")}
                   id="length"
-                  min={1}
+                  min={DIMENSIONS_MIN_VALUES.length}
                   max={10000}
                   step={1}
-                  defaultValue={120}
+                  defaultValue={DIMENSIONS_DEFAULT_VALUES.length}
                 />
               </div>
               <div>
@@ -203,12 +184,12 @@ export default function AddProductForm() {
                 </label>
                 <input
                   type="number"
-                  {...register("dimensions.thickness")}
+                  {...methods.register("dimensions.thickness")}
                   id="thickness"
-                  min={0.1}
+                  min={DIMENSIONS_MIN_VALUES.thickness}
                   max={100}
                   step={0.1}
-                  defaultValue={5}
+                  defaultValue={DIMENSIONS_DEFAULT_VALUES.thickness}
                 />
               </div>
               <div>
@@ -217,49 +198,59 @@ export default function AddProductForm() {
                 </label>
                 <input
                   type="number"
-                  {...register("dimensions.heightFromFloor")}
+                  {...methods.register("dimensions.heightFromFloor")}
                   id="height-from-floor"
-                  min={1}
+                  min={DIMENSIONS_MIN_VALUES.heightFromFloor}
                   max={10000}
                   step={1}
-                  defaultValue={70}
+                  defaultValue={DIMENSIONS_DEFAULT_VALUES.heightFromFloor}
                 />
               </div>
             </div>
-          </FormSection> */}
+          </FormSection>
 
-          {/* <FormSection title="Снимки">
-          <div className="grid sm:grid-cols-2 gap-2 grid-cols-1">
-            <div>
-              <label htmlFor="mainImage" className="text-sm">
-                Главна снимка: *<br />
-              </label>
-              <input
-                className="max-w-full"
-                type="file"
-                {...register("mainImage", {
-                  required: "Главната снимка е задължителна",
-                })}
-                id="mainImage"
-                accept="image/*"
-              />
+          <FormSection title="Снимки">
+            <div className="grid sm:grid-cols-2 gap-2 grid-cols-1">
+              <div>
+                <label htmlFor="mainImage" className="text-sm">
+                  Главна снимка: *<br />
+                </label>
+                <input
+                  className="max-w-full"
+                  type="file"
+                  {...methods.register("mainImage", {
+                    required: "Главната снимка е задължителна",
+                  })}
+                  id="mainImage"
+                  accept="image/*"
+                />
+                {methods.formState.errors.mainImage && (
+                  <span className="w-full text-sm text-error">
+                    {methods.formState.errors.mainImage.message}
+                  </span>
+                )}
+              </div>
+              <div>
+                <label htmlFor="images" className="text-sm">
+                  Допълнителни снимки:
+                  <br />
+                </label>
+                <input
+                  className="max-w-full"
+                  type="file"
+                  multiple
+                  {...methods.register("images")}
+                  id="images"
+                  accept="image/*"
+                />
+                {methods.formState.errors.images && (
+                  <span className="w-full text-sm text-error">
+                    {methods.formState.errors.images.message}
+                  </span>
+                )}
+              </div>
             </div>
-            <div>
-              <label htmlFor="images" className="text-sm">
-                Допълнителни снимки:
-                <br />
-              </label>
-              <input
-                className="max-w-full"
-                type="file"
-                multiple
-                {...register("images")}
-                id="images"
-                accept="image/*"
-              />
-            </div>
-          </div>
-        </FormSection> */}
+          </FormSection>
 
           <div className="mt-5">
             <button

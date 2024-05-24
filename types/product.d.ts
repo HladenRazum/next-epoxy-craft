@@ -1,28 +1,21 @@
 type EpoxyProduct = {
-  id: string;
-  name: string;
-  type: EpoxyProductType;
-  properties: ProductProperties;
-  mainImageUrl: string;
-  imagesUrls: string[];
-};
+  id: string
+  name: string
+  type: EpoxyProductType
+  properties: ProductProperties
+  mainImageUrl: string
+  imagesUrls: string[]
+}
 
-type Dimensions = {
-  width: number;
-  height: number;
-  thickness: number;
-  heightFromFloor: number;
-};
+// // type Materials = {
+// //   resin: string[];
+// //   wood: string[];
+// // };
 
-type Materials = {
-  resin: string[];
-  wood: string[];
-};
+// type ProductProperties = {
+//   dimensions: Dimensions;
+//   materials: Materials;
+//   weight?: number;
+// };
 
-type ProductProperties = {
-  dimensions: Dimensions;
-  materials: Materials;
-  weight?: number;
-};
-
-type EpoxyProductType = "table" | "cutting-board" | "table-top";
+// type EpoxyProductType = "table" | "cutting-board" | "table-top";
