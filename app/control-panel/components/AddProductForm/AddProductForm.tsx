@@ -1,7 +1,7 @@
 "use client"
 
 import { SubmitHandler, useForm, FormProvider } from "react-hook-form"
-import { uploadImage, uploadSelectedImages } from "@/lib/firebase"
+import { addProduct, uploadImage, uploadSelectedImages } from "@/lib/firebase"
 import MulitpleOptionsInput from "@/components/organisms/MultipleOptionsInput/MulitpleOptionsInput"
 import FormSection from "./FormSection"
 import {
@@ -13,6 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import {
   DIMENSIONS_DEFAULT_VALUES,
   DIMENSIONS_MIN_VALUES,
+  ResponseStatuses,
 } from "@/lib/constants"
 
 export default function AddProductForm() {
@@ -22,59 +23,49 @@ export default function AddProductForm() {
     defaultValues: addProductFormDefaultValues,
   })
 
-  console.log(methods.formState.errors)
-
   const onSubmit: SubmitHandler<Product> = async (data) => {
-    console.log("Submitting... Data:" + data)
-    return
-
     const mainImageFile = data.mainImage[0]
 
-    // try {
-    //   await Promise.all([uploadImage(mainImageFile), uploadSelectedImages(data.images)]);
-    //   console.log("Images uploaded successfully")
-    // } catch (error) {
-    //   console.error("Error uploading images -" + error);
-    // }
+    try {
+      const [uploadMainImageResponse, otherImagesUrls] = await Promise.all([
+        uploadImage(mainImageFile),
+        uploadSelectedImages(data.images),
+      ])
 
-    const uploadMainImageResponse = await uploadImage(mainImageFile)
-    const otherImagesUrls = await uploadSelectedImages(data.images)
+      console.log("Images uploaded successfully")
 
-    const product: Omit<EpoxyProduct, "id"> = {
-      type: data.type ?? "cutting-board",
-      name: data.name,
-      mainImageUrl: uploadMainImageResponse.downloadUrl || "",
-      imagesUrls: otherImagesUrls,
-      properties: {
-        materials: {
-          resin: [],
-          wood: [],
+      const product: Omit<EpoxyProduct, "id"> = {
+        type: data.type,
+        name: data.name,
+        mainImageUrl: uploadMainImageResponse.downloadUrl || "",
+        imagesUrls: otherImagesUrls,
+        properties: {
+          materials: {
+            resin: data.materials.resin,
+            wood: data.materials.wood,
+          },
+          dimensions: {
+            width: data.dimensions.width,
+            length: data.dimensions.length,
+            thickness: data.dimensions.thickness,
+            heightFromFloor: data.dimensions.heightFromFloor,
+          },
         },
-        dimensions: {
-          width: data.dimensions.width,
-          height: data.dimensions.height,
-          thickness: data.dimensions.thickness,
-          heightFromFloor: data.dimensions.heightFromFloor,
-        },
-      },
+      }
+
+      const response = await addProduct(product)
+
+      if (response.status !== ResponseStatuses.SUCCESS) {
+        throw new Error("Неуспешно създаване на продукт. Моля опитайте отново")
+      }
+
+      console.log("Продуктът е добавен към базата")
+
+      methods.reset()
+    } catch (error) {
+      console.error("Error uploading images -" + error)
+      return
     }
-    // TODO: add selected resin and wood to the product object
-    // const response = await addProduct(product)
-    // if (response.status === ResponseStatuses.SUCCESS) {
-    //   console.log("Продуктът е добавен към базата")
-    //   setNotification({
-    //     type: "success",
-    //     text: "Продуктът е добавен към базата",
-    //   })
-    // } else {
-    //   console.error("Грешка при създаването на продукта. Моля опитайте отново")
-    //   setNotification({
-    //     type: "error",
-    //     text: "Грешка при създаването на продукта. Моля опитайте отново",
-    //   })
-    // }
-    // reset()
-    // 4. ??? Notify the user and give a link to the new page
   }
 
   return (
@@ -224,9 +215,9 @@ export default function AddProductForm() {
                   id="mainImage"
                   accept="image/*"
                 />
-                {methods.formState.errors.mainImage && (
+                {methods.formState.errors?.images && (
                   <span className="w-full text-sm text-error">
-                    {methods.formState.errors.mainImage.message}
+                    {methods.formState.errors.images?.message}
                   </span>
                 )}
               </div>

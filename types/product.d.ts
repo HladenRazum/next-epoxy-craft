@@ -7,15 +7,14 @@ type EpoxyProduct = {
   imagesUrls: string[]
 }
 
-// // type Materials = {
-// //   resin: string[];
-// //   wood: string[];
-// // };
+type Materials = {
+  resin: string[]
+  wood: string[]
+}
 
-// type ProductProperties = {
-//   dimensions: Dimensions;
-//   materials: Materials;
-//   weight?: number;
-// };
+type ProductProperties = {
+  dimensions: Dimensions
+  materials: Materials
+}
 
-// type EpoxyProductType = "table" | "cutting-board" | "table-top";
+type EpoxyProductType = "table" | "cutting-board" | "table-top"
