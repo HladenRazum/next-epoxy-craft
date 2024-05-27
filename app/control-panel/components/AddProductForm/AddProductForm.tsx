@@ -217,7 +217,7 @@ export default function AddProductForm() {
                 />
                 {methods.formState.errors?.images && (
                   <span className="w-full text-sm text-error">
-                    {methods.formState.errors.images?.message}
+                    {methods.formState.errors.images?.message as string}
                   </span>
                 )}
               </div>
@@ -236,7 +236,7 @@ export default function AddProductForm() {
                 />
                 {methods.formState.errors.images && (
                   <span className="w-full text-sm text-error">
-                    {methods.formState.errors.images.message}
+                    {methods.formState.errors.images?.message as string}
                   </span>
                 )}
               </div>
