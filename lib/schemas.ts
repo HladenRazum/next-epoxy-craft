@@ -101,3 +101,5 @@ export const addProductFormDefaultValues: Product = {
   mainImage: "",
   images: [],
 }
+
+export type Dimensions = z.infer<typeof addProductFormSchema.shape.dimensions>

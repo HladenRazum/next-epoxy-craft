@@ -14,11 +14,13 @@ const config: Config = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       colors: {
-        error: "var(--error)",
         primary: "var(--primary-color)",
+        error: "var(--error)",
+        accent: "var(--accent-color)",
         paper: "var(--paper-color)",
         "paper-secondary": "var(--paper-secondary-color)",
         disabled: 'calc("var(--primary-color) + 0.5)',
+        secondary: "var(--secondary-text)",
       },
       fontSize: {
         xs: "12px",

@@ -1,3 +1,5 @@
+import { Dimensions } from "@/lib/schemas"
+
 type EpoxyProduct = {
   id: string
   name: string
