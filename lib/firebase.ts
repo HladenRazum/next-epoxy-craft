@@ -15,15 +15,16 @@ import { v4 } from "uuid"
 import { firebaseCofig } from "./firebase.config"
 import { FirebaseCollections, ResponseStatuses } from "./constants"
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage"
+import { EpoxyProduct } from "@/types/product"
 
 const app = initializeApp(firebaseCofig)
 const db = getFirestore(app)
 
-export async function uploadImage(image: File) {
+export async function uploadImage(image: File, folderName: string) {
   const storage = getStorage()
   const imageRef = ref(
     storage,
-    `${FirebaseCollections.STORAGE_IMAGES}/${image.name}`
+    `${FirebaseCollections.STORAGE_IMAGES}/${folderName}/${image.name}`
   )
 
   let response
@@ -50,12 +51,12 @@ export async function uploadImage(image: File) {
   return response
 }
 
-export async function uploadSelectedImages(images: File[]) {
+export async function uploadSelectedImages(images: File[], folderName: string) {
   let imagesUrls: string[] = []
   let uploadFilesPromises = []
 
   for (const fileImage of images) {
-    uploadFilesPromises.push(uploadImage(fileImage))
+    uploadFilesPromises.push(uploadImage(fileImage, folderName))
   }
 
   await Promise.all([...uploadFilesPromises]).then((values) => {
@@ -167,12 +168,9 @@ export async function userExistsInFirebase(user: User): Promise<boolean> {
 
   // If the username exists, compare passwords
   if (querySnapshot.docs.length > 0) {
-    // If username and password matches return true else return false
-    if (querySnapshot.docs.at(0)?.get("password") === user.password) {
-      return true
-    } else return false
-  } else {
-    // User not found
-    return false
-  }
+    const password = querySnapshot.docs.at(0)?.get("password")
+    return password === user.password
+  } // User not found
+
+  return false
 }

@@ -52,6 +52,7 @@
   --background-end-rgb: 255, 255, 255;
   --border-color: rgba(0, 0, 0, 0.3);
   --error: red;
+  --success: rgb(3, 184, 3);
 }
 
 :root {
@@ -77,6 +78,7 @@ label {
     --background-end-rgb: 0, 0, 0;
     --border-color: rgba(255, 255, 255, 0.3);
     --accent-color: rgb(207, 254, 1);
+    --success: rgb(26, 143, 26);
   }
 }
 

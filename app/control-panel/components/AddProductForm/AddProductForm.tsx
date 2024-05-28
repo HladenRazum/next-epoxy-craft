@@ -1,5 +1,7 @@
 "use client"
 
+import { useState } from "react"
+import _ from "lodash"
 import { SubmitHandler, useForm, FormProvider } from "react-hook-form"
 import { addProduct, uploadImage, uploadSelectedImages } from "@/lib/firebase"
 import MulitpleOptionsInput from "@/components/organisms/MultipleOptionsInput/MulitpleOptionsInput"
@@ -15,6 +17,8 @@ import {
   DIMENSIONS_MIN_VALUES,
   ResponseStatuses,
 } from "@/lib/constants"
+import { EpoxyProduct } from "@/types/product"
+import Notification from "@/components/atoms/Notification"
 
 export default function AddProductForm() {
   const methods = useForm<Product>({
@@ -23,16 +27,19 @@ export default function AddProductForm() {
     defaultValues: addProductFormDefaultValues,
   })
 
+  const [statusMessage, setStatusMessage] = useState<NotificationMessage>({
+    type: null,
+    message: "",
+  })
+
   const onSubmit: SubmitHandler<Product> = async (data) => {
     const mainImageFile = data.mainImage[0]
 
     try {
       const [uploadMainImageResponse, otherImagesUrls] = await Promise.all([
-        uploadImage(mainImageFile),
-        uploadSelectedImages(data.images),
+        uploadImage(mainImageFile, _.kebabCase(data.name)),
+        uploadSelectedImages(data.images, _.kebabCase(data.name)),
       ])
-
-      console.log("Images uploaded successfully")
 
       const product: Omit<EpoxyProduct, "id"> = {
         type: data.type,
@@ -59,11 +66,24 @@ export default function AddProductForm() {
         throw new Error("Неуспешно създаване на продукт. Моля опитайте отново")
       }
 
-      console.log("Продуктът е добавен към базата")
+      setStatusMessage({
+        type: "success",
+        message: "Продуктът е добавен към колекцията",
+      })
 
       methods.reset()
     } catch (error) {
-      console.error("Error uploading images -" + error)
+      let errorMessage: string = ""
+      if (error instanceof Error) {
+        console.error("Error -" + error.stack)
+        errorMessage = error.message
+      }
+
+      setStatusMessage({
+        type: "error",
+        message: errorMessage ?? "Възникна грешка при създаването на продукта",
+      })
+
       return
     }
   }
@@ -215,9 +235,9 @@ export default function AddProductForm() {
                   id="mainImage"
                   accept="image/*"
                 />
-                {methods.formState.errors?.images && (
+                {methods.formState.errors?.mainImage && (
                   <span className="w-full text-sm text-error">
-                    {methods.formState.errors.images?.message as string}
+                    {methods.formState.errors.mainImage?.message as string}
                   </span>
                 )}
               </div>
@@ -254,6 +274,8 @@ export default function AddProductForm() {
                 : "Добави продукт"}
             </button>
           </div>
+
+          <Notification notification={statusMessage} />
         </form>
       </FormProvider>
     </>

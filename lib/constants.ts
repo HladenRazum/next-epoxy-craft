@@ -56,5 +56,5 @@ export const DIMENSIONS_DEFAULT_VALUES = {
   heightFromFloor: 90,
 }
 
-export const MAX_FILE_SIZE_MB = 5
+export const MAX_FILE_SIZE_MB = 10
 export const ACCEPTED_IMAGE_TYPES = ["jpg", "jpeg", "png"]

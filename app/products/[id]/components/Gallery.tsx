@@ -50,7 +50,7 @@ export default function Gallery({
           target="_blank"
           rel="noreferrer"
         >
-          <div className="h-[360px] relative overflow-hidden">
+          <div className="h-[360px] relative overflow-hidden bg-slate-500">
             <Image
               src={image}
               alt={productName + "-" + index}

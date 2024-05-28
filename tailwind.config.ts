@@ -15,8 +15,9 @@ const config: Config = {
       },
       colors: {
         primary: "var(--primary-color)",
-        error: "var(--error)",
         accent: "var(--accent-color)",
+        success: "var(--success)",
+        error: "var(--error)",
         paper: "var(--paper-color)",
         "paper-secondary": "var(--paper-secondary-color)",
         disabled: 'calc("var(--primary-color) + 0.5)',

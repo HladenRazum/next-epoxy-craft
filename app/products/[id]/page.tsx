@@ -20,7 +20,7 @@ export default async function ProductPage({
 
   return (
     <div>
-      <main className="wrapper pt-5 sm:pt-10 gap-10 flex flex-col sm:flex-row">
+      <main className="wrapper mb-10 pt-5 sm:pt-10 gap-10 flex flex-col sm:flex-row">
         <aside>
           <ProductInfo product={product} />
         </aside>
