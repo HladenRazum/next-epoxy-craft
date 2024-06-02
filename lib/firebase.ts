@@ -1,3 +1,6 @@
+"use server"
+
+import { compare } from "bcrypt"
 import { initializeApp } from "firebase/app"
 import {
   collection,
@@ -164,13 +167,15 @@ export async function userExistsInFirebase(user: User): Promise<boolean> {
   // Check users collection in Firebase and look for the user by username
   const usersRef = collection(db, FirebaseCollections.USERS)
   const q = query(usersRef, where("username", "==", user.username), limit(1))
+
   const querySnapshot = await getDocs(q)
 
-  // If the username exists, compare passwords
   if (querySnapshot.docs.length > 0) {
     const password = querySnapshot.docs.at(0)?.get("password")
-    return password === user.password
-  } // User not found
+    const isMatch = await compare(user.password, password)
+
+    return isMatch
+  }
 
   return false
 }

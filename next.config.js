@@ -11,6 +11,9 @@ const nextConfig = {
     ],
     domains: ["firebasestorage.googleapis.com"],
   },
-};
+  experimental: {
+    serverActions: true,
+  },
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig

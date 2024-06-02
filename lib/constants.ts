@@ -1,5 +1,3 @@
-import { Product, addProductFormSchema } from "./schemas"
-
 export const NAV_LINKS: NavLinkType[] = [
   { name: "home", href: "/", text: "Начало" },
   { name: "contact", href: "/#contact", text: "Контакти" },
