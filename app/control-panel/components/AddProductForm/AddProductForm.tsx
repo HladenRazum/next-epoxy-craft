@@ -38,12 +38,19 @@ export default function AddProductForm() {
   })
 
   const onSubmit: SubmitHandler<Product> = async (data) => {
+    setStatusMessage({
+      type: null,
+      message: "",
+    })
+
     const isExistingTitle = await checkProductTitleExist(_.kebabCase(data.name))
 
     if (isExistingTitle) {
       methods.setError("name", {
         message: "Името вече същестува",
       })
+
+      return
     }
 
     const mainImageFile = data.mainImage[0]
