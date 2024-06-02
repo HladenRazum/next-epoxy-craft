@@ -17,7 +17,13 @@ import {
 import { v4 } from "uuid"
 import { firebaseCofig } from "./firebase.config"
 import { FirebaseCollections, ResponseStatuses } from "./constants"
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage"
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytes,
+  listAll,
+} from "firebase/storage"
 import { EpoxyProduct } from "@/types/product"
 
 const app = initializeApp(firebaseCofig)
@@ -80,8 +86,14 @@ export async function uploadSelectedImages(images: File[], folderName: string) {
 }
 
 export async function checkProductTitleExist(title: string): Promise<boolean> {
-  // Check if a folder with the slugified title exist in Storage -> product-images/
-  return false
+  const storage = getStorage()
+  const folderRef = ref(
+    storage,
+    `${FirebaseCollections.STORAGE_IMAGES}/${title}`
+  )
+
+  const folders = await listAll(folderRef)
+  return folders.items.length > 0
 }
 
 export async function getAllProductIds() {
