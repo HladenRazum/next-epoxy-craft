@@ -1,3 +1,6 @@
+import { Dimensions } from "@/lib/schemas"
+import { EpoxyProductType } from "@/types/product"
+
 export type AddProductFormFields = {
   name: string
   type: EpoxyProductType
@@ -5,7 +8,7 @@ export type AddProductFormFields = {
     wood: string[]
     resin: string[]
   }
-  // mainImage: File[]
-  // images: File[]
-  // dimensions: Dimensions
+  mainImage: File[]
+  images: File[]
+  dimensions: Dimensions
 }
