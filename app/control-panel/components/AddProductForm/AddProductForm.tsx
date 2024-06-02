@@ -3,7 +3,12 @@
 import { useState } from "react"
 import _ from "lodash"
 import { SubmitHandler, useForm, FormProvider } from "react-hook-form"
-import { addProduct, uploadImage, uploadSelectedImages } from "@/lib/firebase"
+import {
+  addProduct,
+  checkProductTitleExist,
+  uploadImage,
+  uploadSelectedImages,
+} from "@/lib/firebase"
 import MulitpleOptionsInput from "@/components/organisms/MultipleOptionsInput/MulitpleOptionsInput"
 import FormSection from "./FormSection"
 import {
@@ -33,59 +38,61 @@ export default function AddProductForm() {
   })
 
   const onSubmit: SubmitHandler<Product> = async (data) => {
-    const mainImageFile = data.mainImage[0]
+    // const mainImageFile = data.mainImage[0]
 
-    try {
-      const [uploadMainImageResponse, otherImagesUrls] = await Promise.all([
-        uploadImage(mainImageFile, _.kebabCase(data.name)),
-        uploadSelectedImages(data.images, _.kebabCase(data.name)),
-      ])
+    await checkProductTitleExist(_.kebabCase(data.name))
 
-      const product: Omit<EpoxyProduct, "id"> = {
-        type: data.type,
-        name: data.name,
-        mainImageUrl: uploadMainImageResponse.downloadUrl || "",
-        imagesUrls: otherImagesUrls,
-        properties: {
-          materials: {
-            resin: data.materials.resin,
-            wood: data.materials.wood,
-          },
-          dimensions: {
-            width: data.dimensions.width,
-            length: data.dimensions.length,
-            thickness: data.dimensions.thickness,
-            heightFromFloor: data.dimensions.heightFromFloor,
-          },
-        },
-      }
+    // try {
+    //   const [uploadMainImageResponse, otherImagesUrls] = await Promise.all([
+    //     uploadImage(mainImageFile, _.kebabCase(data.name)),
+    //     uploadSelectedImages(data.images, _.kebabCase(data.name)),
+    //   ])
 
-      const response = await addProduct(product)
+    //   const product: Omit<EpoxyProduct, "id"> = {
+    //     type: data.type,
+    //     name: data.name,
+    //     mainImageUrl: uploadMainImageResponse.downloadUrl || "",
+    //     imagesUrls: otherImagesUrls,
+    //     properties: {
+    //       materials: {
+    //         resin: data.materials.resin,
+    //         wood: data.materials.wood,
+    //       },
+    //       dimensions: {
+    //         width: data.dimensions.width,
+    //         length: data.dimensions.length,
+    //         thickness: data.dimensions.thickness,
+    //         heightFromFloor: data.dimensions.heightFromFloor,
+    //       },
+    //     },
+    //   }
 
-      if (response.status !== ResponseStatuses.SUCCESS) {
-        throw new Error("Неуспешно създаване на продукт. Моля опитайте отново")
-      }
+    //   const response = await addProduct(product)
 
-      setStatusMessage({
-        type: "success",
-        message: "Продуктът е добавен към колекцията",
-      })
+    //   if (response.status !== ResponseStatuses.SUCCESS) {
+    //     throw new Error("Неуспешно създаване на продукт. Моля опитайте отново")
+    //   }
 
-      methods.reset()
-    } catch (error) {
-      let errorMessage: string = ""
-      if (error instanceof Error) {
-        console.error("Error -" + error.stack)
-        errorMessage = error.message
-      }
+    //   setStatusMessage({
+    //     type: "success",
+    //     message: "Продуктът е добавен към колекцията",
+    //   })
 
-      setStatusMessage({
-        type: "error",
-        message: errorMessage ?? "Възникна грешка при създаването на продукта",
-      })
+    //   methods.reset()
+    // } catch (error) {
+    //   let errorMessage: string = ""
+    //   if (error instanceof Error) {
+    //     console.error("Error -" + error.stack)
+    //     errorMessage = error.message
+    //   }
 
-      return
-    }
+    //   setStatusMessage({
+    //     type: "error",
+    //     message: errorMessage ?? "Възникна грешка при създаването на продукта",
+    //   })
+
+    //   return
+    // }
   }
 
   return (

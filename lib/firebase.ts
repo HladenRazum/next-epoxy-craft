@@ -79,6 +79,11 @@ export async function uploadSelectedImages(images: File[], folderName: string) {
   return imagesUrls
 }
 
+export async function checkProductTitleExist(title: string): Promise<boolean> {
+  // Check if a folder with the slugified title exist in Storage -> product-images/
+  return false
+}
+
 export async function getAllProductIds() {
   let productsIds: string[] = []
   const q = query(collection(db, FirebaseCollections.FIRESTORE_DOCUMENTS))
