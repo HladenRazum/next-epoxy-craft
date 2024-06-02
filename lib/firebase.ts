@@ -1,6 +1,3 @@
-"use server"
-
-import { compare } from "bcrypt"
 import { initializeApp } from "firebase/app"
 import {
   collection,
@@ -8,11 +5,9 @@ import {
   getDoc,
   getDocs,
   getFirestore,
-  limit,
   query,
   setDoc,
   updateDoc,
-  where,
 } from "firebase/firestore"
 import { v4 } from "uuid"
 import { firebaseCofig } from "./firebase.config"
@@ -178,21 +173,4 @@ export async function addProduct(product: Omit<EpoxyProduct, "id">) {
       productId: null,
     }
   }
-}
-
-export async function userExistsInFirebase(user: User): Promise<boolean> {
-  // Check users collection in Firebase and look for the user by username
-  const usersRef = collection(db, FirebaseCollections.USERS)
-  const q = query(usersRef, where("username", "==", user.username), limit(1))
-
-  const querySnapshot = await getDocs(q)
-
-  if (querySnapshot.docs.length > 0) {
-    const password = querySnapshot.docs.at(0)?.get("password")
-    const isMatch = await compare(user.password, password)
-
-    return isMatch
-  }
-
-  return false
 }
