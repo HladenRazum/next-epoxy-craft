@@ -107,6 +107,8 @@ export type HomepageProduct = {
   id: string
   src: string
   name: string
+  mainImageUrl: string
+  blurredDataUrl: string
 }
 
 export async function updateProductsImages(

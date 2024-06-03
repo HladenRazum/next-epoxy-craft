@@ -3,7 +3,7 @@ import { twMerge } from "tailwind-merge"
 
 // Examples
 // getFormattedStringFromArray(["abc", "bcd"]) => 'abc, bcd';
-// getFormattedStringFromArray(["abc""]) => 'abc';
+// getFormattedStringFromArray(["abc"]) => 'abc';
 export function getFormattedStringFromArray(arr: string[]): string {
   if (arr.length <= 1) {
     return arr[0]

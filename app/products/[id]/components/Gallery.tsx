@@ -1,8 +1,8 @@
 "use client"
 
 import React, { useEffect } from "react"
-import PhotoSwipeLightbox from "photoswipe/lightbox"
 import Image from "next/image"
+import PhotoSwipeLightbox from "photoswipe/lightbox"
 import "photoswipe/photoswipe.css"
 
 type Props = {
@@ -15,7 +15,6 @@ type Props = {
 
 export default function Gallery({
   imagesUrls,
-  productId,
   productName,
   mainImageUrl,
   galleryId,
