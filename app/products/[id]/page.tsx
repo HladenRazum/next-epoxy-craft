@@ -3,6 +3,7 @@ import { getAllProductIds, getProductById } from "@/lib/firebase"
 import InvalidAddress from "@/components/molecules/InvalidAddress"
 import { TERMS } from "@/lib/constants"
 import ProductInfo from "./components/ProductInfo"
+import { getBlurredDataUrls } from "@/lib/getBase64"
 
 export default async function ProductPage({
   params,
@@ -18,6 +19,9 @@ export default async function ProductPage({
 
   const product = await getProductById(id)
 
+  const allImages = [product.mainImageUrl, ...product.imagesUrls]
+  const imageUrlsWithBlur = await getBlurredDataUrls(allImages)
+
   return (
     <div>
       <main className="wrapper mb-10 pt-5 sm:pt-10 gap-10 flex flex-col sm:flex-row">
@@ -26,11 +30,12 @@ export default async function ProductPage({
         </aside>
         <div className="flex-1">
           <Gallery
-            mainImageUrl={product.mainImageUrl}
-            imagesUrls={product.imagesUrls}
+            galleryId="product-images"
             productId={id}
             productName={product.name}
-            galleryId="product-images"
+            mainImageUrl={product.mainImageUrl}
+            imagesUrls={product.imagesUrls}
+            blurDataUrls={imageUrlsWithBlur ?? []}
           />
         </div>
       </main>

@@ -11,6 +11,7 @@ type Props = {
   productId: string
   productName: string
   galleryId: string
+  blurDataUrls: (string | undefined)[]
 }
 
 export default function Gallery({
@@ -18,6 +19,7 @@ export default function Gallery({
   productName,
   mainImageUrl,
   galleryId,
+  blurDataUrls,
 }: Props) {
   useEffect(() => {
     let lightbox: PhotoSwipeLightbox | null = new PhotoSwipeLightbox({
@@ -55,6 +57,8 @@ export default function Gallery({
               alt={productName + "-" + index}
               className="object-cover"
               fill={true}
+              placeholder="blur"
+              blurDataURL={blurDataUrls?.at(index) ?? ""}
             />
           </div>
         </a>

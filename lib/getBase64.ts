@@ -1,3 +1,4 @@
+import { ImageWithBlurredData } from "@/types/image-with-blurred-data"
 import { getPlaiceholder } from "plaiceholder"
 import { HomepageProduct } from "./firebase"
 
@@ -22,7 +23,7 @@ async function getBase64(imageUrl: string) {
   }
 }
 
-export async function addBlurredDataToUrls(
+export async function addBlurredDataToProducts(
   images: HomepageProduct[]
 ): Promise<HomepageProduct[]> {
   const base64Promises = images.map((image) => getBase64(image.src))
@@ -33,4 +34,12 @@ export async function addBlurredDataToUrls(
   })
 
   return imagesWithBlur
+}
+
+export async function getBlurredDataUrls(
+  urls: string[]
+): Promise<(string | undefined)[]> {
+  const base64Promises = urls.map((url) => getBase64(url))
+  const base64Results = await Promise.all(base64Promises)
+  return base64Results
 }

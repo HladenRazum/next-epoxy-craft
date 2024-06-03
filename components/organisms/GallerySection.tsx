@@ -2,11 +2,11 @@ import Image from "next/image"
 import Link from "next/link"
 import MasonryGrid from "./MasonryGrid"
 import { getAllProducts } from "@/lib/firebase"
-import { addBlurredDataToUrls } from "@/lib/getBase64"
+import { addBlurredDataToProducts } from "@/lib/getBase64"
 
 export default async function GallerySection() {
   const products = await getAllProducts()
-  const imagesWithBlur = await addBlurredDataToUrls(products)
+  const imagesWithBlur = await addBlurredDataToProducts(products)
 
   return (
     <section className="wrapper py-20">
