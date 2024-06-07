@@ -1,4 +1,3 @@
-import { ImageWithBlurredData } from "@/types/image-with-blurred-data"
 import { getPlaiceholder } from "plaiceholder"
 import { HomepageProduct } from "./firebase"
 
